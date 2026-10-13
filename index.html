@@ -1,0 +1,2777 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>26년 삿포로 U.Sung Family</title>
+  
+  <!-- 모바일 홈 화면 설치(PWA) 전용 메타 태그 & 앱 아이콘 설정 -->
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="26년 삿포로 U.Sung Family" />
+  <meta name="application-name" content="26년 삿포로 U.Sung Family" />
+  <meta name="theme-color" content="#4338ca" />
+  
+  <!-- 스마트폰 바탕화면 앱 아이콘 (단풍잎 일러스트) -->
+  <link rel="apple-touch-icon" href="https://api.iconify.design/twemoji:maple-leaf.svg?width=192&height=192" />
+  <link rel="icon" type="image/svg+xml" href="https://api.iconify.design/twemoji:maple-leaf.svg?width=192&height=192" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      -webkit-tap-highlight-color: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    /* 롱프레스 및 드래그 앤 드롭 전용 스타일 */
+    .spot-card-item {
+      touch-action: pan-y;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .spot-card-item.is-dragging {
+      opacity: 0.95;
+      transform: scale(1.02);
+      box-shadow: 0 16px 32px -4px rgba(79, 70, 229, 0.3), 0 8px 12px -6px rgba(0, 0, 0, 0.12);
+      border-color: #6366f1 !important;
+      background-color: #eef2ff !important;
+      z-index: 50;
+      touch-action: none;
+    }
+    .spot-drag-placeholder {
+      border: 2px dashed #818cf8;
+      background-color: #f5f3ff;
+      border-radius: 0.75rem;
+      min-height: 80px;
+      margin: 0.5rem 0;
+      transition: all 0.2s ease;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 pb-28">
+
+  <!-- 1. 최상단 완전 틀 고정 헤더 -->
+  <header id="fixedTopHeader" class="fixed top-0 left-0 right-0 z-50 bg-indigo-700 shadow-md">
+    <div class="px-3 sm:px-4 py-2.5 flex items-center justify-between text-white relative gap-2">
+      <!-- 좌측 타이틀 영역 (긴급 버튼 제거로 넓은 폭 확보, 온전히 표시됨) -->
+      <div class="shrink-0 min-w-0 pr-1 flex flex-col justify-center">
+        <h1 class="text-sm sm:text-base font-bold flex items-center gap-1 leading-tight whitespace-nowrap">
+          <span>🍁</span> 26년 삿포로 U.Sung Family
+        </h1>
+        <p class="text-[9.5px] sm:text-[10.5px] text-indigo-200 font-medium leading-tight">10.15~10.19</p>
+      </div>
+
+      <!-- 우측 영역: 번역 도구 및 액션 버튼군 -->
+      <div class="flex items-center justify-end gap-1.5 min-w-0 shrink-0">
+        <a href="https://papago.naver.com/?sk=ko&tk=ja" target="_blank" rel="noopener noreferrer" class="px-2 sm:px-2.5 py-1 bg-teal-500 hover:bg-teal-600 active:scale-95 text-white text-[11px] sm:text-xs font-bold rounded-md shadow-sm flex items-center justify-center gap-0.5 transition shrink-0" title="네이버 파파고 번역 (한 ⇄ 일)">
+          <span class="text-[11px]">🦜</span><span>파파고</span>
+        </a>
+
+        <a href="https://translate.google.com/?sl=ko&tl=ja&op=translate" target="_blank" rel="noopener noreferrer" class="px-2 sm:px-2.5 py-1 bg-sky-500 hover:bg-sky-600 active:scale-95 text-white text-[11px] sm:text-xs font-bold rounded-md shadow-sm flex items-center justify-center gap-0.5 transition shrink-0" title="구글 번역 (한 ⇄ 일)">
+          <span class="text-[11px]">🌐</span><span>구글</span>
+        </a>
+
+        <button onclick="openAddSpotModal()" id="headerAddSpotBtn" class="px-2.5 sm:px-3 py-1 bg-white text-indigo-700 text-[11px] sm:text-xs font-black rounded-md shadow-sm hover:bg-indigo-50 active:scale-95 transition shrink-0 text-center">
+          + 스팟
+        </button>
+        <button onclick="openAddCheckModal()" id="headerAddCheckBtn" class="px-2.5 sm:px-3 py-1 bg-amber-400 text-slate-900 text-[11px] sm:text-xs font-black rounded-md shadow-sm hover:bg-amber-300 active:scale-95 transition shrink-0 text-center hidden">
+          + 준비물
+        </button>
+        <button onclick="openAddExpenseModal()" id="headerAddExpenseBtn" class="px-2.5 sm:px-3 py-1 bg-emerald-500 text-white text-[11px] sm:text-xs font-black rounded-md shadow-sm hover:bg-emerald-600 active:scale-95 transition shrink-0 text-center hidden">
+          + 지출
+        </button>
+      </div>
+    </div>
+
+    <!-- 메인 탭바 -->
+    <nav class="bg-white border-b border-slate-200 flex text-xs font-bold">
+      <button onclick="switchTab('itinerary')" id="tab-itinerary" class="flex-1 py-2.5 text-center text-indigo-700 border-b-2 border-indigo-700 font-black">
+        🗓️ 일정
+      </button>
+      <button onclick="switchTab('checklist')" id="tab-checklist" class="flex-1 py-2.5 text-center text-slate-500 border-b-2 border-transparent">
+        📋 체크리스트
+      </button>
+      <button onclick="switchTab('budget')" id="tab-budget" class="flex-1 py-2.5 text-center text-slate-500 border-b-2 border-transparent">
+        💰 Budget (예산)
+      </button>
+    </nav>
+
+    <!-- 날짜별 알약 버튼 바 -->
+    <div id="stickyDayBar" class="bg-indigo-50/95 backdrop-blur-sm border-b border-indigo-100 px-3 py-2 overflow-x-auto no-scrollbar flex items-center gap-2">
+      <button onclick="selectDay('day-1', this)" id="pill-day-1" class="day-pill-btn whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold bg-indigo-600 text-white shadow-sm">
+        15(목) 김해➔신치토세
+      </button>
+      <button onclick="selectDay('day-2', this)" id="pill-day-2" class="day-pill-btn whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold bg-white text-slate-700 border border-slate-200 shadow-sm">
+        16(금) 삿포로 시내
+      </button>
+      <button onclick="selectDay('day-3', this)" id="pill-day-3" class="day-pill-btn whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold bg-white text-slate-700 border border-slate-200 shadow-sm">
+        17(토) 렌터카➔후라노
+      </button>
+      <button onclick="selectDay('day-4', this)" id="pill-day-4" class="day-pill-btn whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold bg-white text-slate-700 border border-slate-200 shadow-sm">
+        18(일) 비에이/후라노
+      </button>
+      <button onclick="selectDay('day-5', this)" id="pill-day-5" class="day-pill-btn whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold bg-white text-slate-700 border border-slate-200 shadow-sm">
+        19(월) 렌터카 반납➔김해
+      </button>
+    </div>
+  </header>
+
+  <!-- 2. 본문 컨테이너 -->
+  <div id="contentContainer" class="pt-[145px]">
+
+    <!-- [섹션 1] 일정 -->
+    <main id="itinerarySection" class="p-4 space-y-5 max-w-lg mx-auto">
+      <!-- 1일차 -->
+      <section id="day-1" class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="bg-indigo-50/70 p-4 border-b border-indigo-100">
+          <span class="text-[11px] font-black text-indigo-600 uppercase">DAY 1</span>
+          <h2 class="text-base font-bold text-slate-800">10/15 (목) 김해 ➔ 신치토세 도착</h2>
+          <p class="text-xs text-slate-500">이스타항공 ZE951 (14:10~16:40) & 삿포로 시내 체크인</p>
+        </div>
+        <div class="p-4 space-y-3">
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <div class="text-[11px] text-slate-500 font-bold">14:10 ~ 16:40 (선결제 완료)</div>
+            <div class="text-sm font-bold text-slate-800">이스타항공 ZE951 (김해 ➔ 신치토세)</div>
+            <div class="text-[11px] text-indigo-600 font-semibold mt-0.5">💰 왕복 항공+3인 보험: 1,070,420원</div>
+            <div class="flex justify-end gap-1 mt-2">
+              <a href="https://www.google.com/maps/search/?api=1&query=New+Chitose+Airport" target="_blank" class="px-2 py-1 text-xs bg-white text-slate-700 rounded-lg border font-semibold">📍 공항 위치</a>
+              <button onclick="openGallery('spot_d1_flight', '이스타항공 신치토세 공항')" class="px-2 py-1 text-xs bg-indigo-50 text-indigo-700 rounded-lg border border-indigo-200 font-bold flex items-center gap-0.5">
+                <span>📸</span><span id="badge-spot_d1_flight">0</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-amber-50/50 p-3 rounded-xl border border-amber-200/60">
+            <div class="text-[11px] text-amber-800 font-bold">18:00 체크인 (2박 시작)</div>
+            <div class="text-sm font-bold text-slate-800">홀리데이 인 & 스위트 삿포로 오도리 공원</div>
+            <div class="text-[11px] text-amber-900 font-semibold mt-0.5">💰 2박 총액: 430,834원 선결제 완료</div>
+            <div class="flex justify-end gap-1 mt-2">
+              <a href="https://www.google.com/maps/search/?api=1&query=Holiday+Inn+and+Suites+Sapporo+Odori+Park" target="_blank" class="px-2 py-1 text-xs bg-white text-slate-700 rounded-lg border font-semibold">📍 위치</a>
+              <a href="https://www.google.com/maps/dir/?api=1&destination=Holiday+Inn+and+Suites+Sapporo+Odori+Park&travelmode=walking" target="_blank" class="px-2 py-1 text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg font-bold">🚶 도보</a>
+              <a href="https://www.google.com/maps/dir/?api=1&destination=Holiday+Inn+and+Suites+Sapporo+Odori+Park&travelmode=driving" target="_blank" class="px-2 py-1 text-xs bg-blue-50 text-blue-700 border border-blue-200 rounded-lg font-bold">🚗 운전</a>
+              <button onclick="openGallery('spot_d1_hotel', '홀리데이 인 삿포로')" class="px-2 py-1 text-xs bg-indigo-50 text-indigo-700 rounded-lg border border-indigo-200 font-bold flex items-center gap-0.5">
+                <span>📸</span><span id="badge-spot_d1_hotel">0</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 동적 스팟 목록 -->
+          <div id="dynamic-spots-day-1" class="space-y-3 pt-1"></div>
+        </div>
+      </section>
+
+      <!-- 2일차 -->
+      <section id="day-2" class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hidden">
+        <div class="bg-indigo-50/70 p-4 border-b border-indigo-100">
+          <div class="flex items-center justify-between gap-2 flex-wrap">
+            <div>
+              <span class="text-[11px] font-black text-indigo-600 uppercase">DAY 2</span>
+              <h2 class="text-base font-bold text-slate-800">10/16 (금) 삿포로 시내 대중교통 자율 관광</h2>
+            </div>
+            <!-- 포로클 Map, 경로 및 주의사항 버튼 그룹 -->
+            <div class="flex flex-wrap items-center justify-end gap-1.5 shrink-0">
+              <a href="https://porocle.jp/en/portmap/" target="_blank" rel="noopener noreferrer" class="bg-rose-500 hover:bg-rose-600 active:scale-95 text-white text-xs font-bold px-2.5 py-1.5 rounded-xl shadow-xs flex items-center gap-1 transition border border-rose-400" title="포로클 실시간 대여소(포트) 지도 열기">
+                <span>🚲</span><span>포로클 Map</span><span class="text-[10px] opacity-80">↗</span>
+              </a>
+              <button onclick="openPorocleRouteModal()" class="bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white text-xs font-extrabold px-2.5 py-1.5 rounded-xl shadow-xs flex items-center gap-1 transition border border-indigo-400" title="구글 지도 10개 스팟 자전거 코스도 열기">
+                <span>🗺️</span><span>포로클 경로</span>
+              </button>
+              <button onclick="openPorocleNoticeModal()" class="bg-amber-500 hover:bg-amber-600 active:scale-95 text-slate-950 text-xs font-extrabold px-2.5 py-1.5 rounded-xl shadow-xs flex items-center gap-1 transition border border-amber-400" title="포로클 대여 및 주행 주의사항 보기">
+                <span>⚠️</span><span>주의사항</span>
+              </button>
+            </div>
+          </div>
+          <p class="text-xs text-slate-500 mt-1">오도리 공원, 삿포로 맥주박물관 & 시내 미식 라이딩 탐방</p>
+        </div>
+        <div class="p-4 space-y-3">
+          <div id="dynamic-spots-day-2" class="space-y-3"></div>
+        </div>
+      </section>
+
+      <!-- 3일차 -->
+      <section id="day-3" class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hidden">
+        <div class="bg-indigo-50/70 p-4 border-b border-indigo-100">
+          <span class="text-[11px] font-black text-indigo-600 uppercase">DAY 3</span>
+          <h2 class="text-base font-bold text-slate-800">10/17 (토) 렌터카 수령 ➔ 후라노 이동</h2>
+          <p class="text-xs text-slate-500">09:00 차량 인수 ➔ 11:00 체크아웃 ➔ 15:00 후라노 체크인</p>
+        </div>
+        <div class="p-4 space-y-3">
+          <div class="bg-blue-50/70 p-3 rounded-xl border border-blue-200">
+            <div class="text-[11px] text-blue-700 font-bold">09:00 차량 인수 (NIPPON Rent-A-Car)</div>
+            <div class="text-sm font-bold text-slate-800">니폰렌트카 스스키노 지점</div>
+            <div class="text-[11px] text-slate-600 mt-0.5">선결제: 219,667원 | 현지결제: JPY 5,500 (편도 수수료)</div>
+            <div class="flex justify-end gap-1 mt-2">
+              <a href="https://www.google.com/maps/search/?api=1&query=Nippon+Rent-A-Car+Susukino" target="_blank" class="px-2 py-1 text-xs bg-white text-slate-700 rounded-lg border font-semibold">📍 위치</a>
+              <a href="https://www.google.com/maps/dir/?api=1&destination=Nippon+Rent-A-Car+Susukino&travelmode=walking" target="_blank" class="px-2 py-1 text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg font-bold">🚶 도보</a>
+              <button onclick="openGallery('spot_d3_rental', '니폰렌트카 스스키노')" class="px-2 py-1 text-xs bg-indigo-50 text-indigo-700 rounded-lg border border-indigo-200 font-bold flex items-center gap-0.5">
+                <span>📸</span><span id="badge-spot_d3_rental">0</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-amber-50/50 p-3 rounded-xl border border-amber-200/60">
+            <div class="text-[11px] text-amber-800 font-bold">15:00 체크인 (2박 시작)</div>
+            <div class="text-sm font-bold text-slate-800">라비스타 후라노 힐즈 온센</div>
+            <div class="text-[11px] text-amber-900 font-semibold mt-0.5">💰 2박 총액: JPY 51,834 확정 결제 완료</div>
+            <div class="flex justify-end gap-1 mt-2">
+              <a href="https://www.google.com/maps/search/?api=1&query=La+Vista+Furano+Hills" target="_blank" class="px-2 py-1 text-xs bg-white text-slate-700 rounded-lg border font-semibold">📍 위치</a>
+              <a href="https://www.google.com/maps/dir/?api=1&destination=La+Vista+Furano+Hills&travelmode=driving" target="_blank" class="px-2 py-1 text-xs bg-blue-50 text-blue-700 border border-blue-200 rounded-lg font-bold">🚗 운전 내비</a>
+              <button onclick="openGallery('spot_d3_lavista', '라비스타 후라노 힐즈')" class="px-2 py-1 text-xs bg-indigo-50 text-indigo-700 rounded-lg border border-indigo-200 font-bold flex items-center gap-0.5">
+                <span>📸</span><span id="badge-spot_d3_lavista">0</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="dynamic-spots-day-3" class="space-y-3"></div>
+        </div>
+      </section>
+
+      <!-- 4일차 -->
+      <section id="day-4" class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hidden">
+        <div class="bg-indigo-50/70 p-4 border-b border-indigo-100">
+          <span class="text-[11px] font-black text-indigo-600 uppercase">DAY 4</span>
+          <h2 class="text-base font-bold text-slate-800">10/18 (일) 비에이 & 후라노 전일 드라이브</h2>
+          <p class="text-xs text-slate-500">청의 호수, 흰수염 폭포, 준페이 에비동</p>
+        </div>
+        <div class="p-4 space-y-3">
+          <div id="dynamic-spots-day-4" class="space-y-3"></div>
+        </div>
+      </section>
+
+      <!-- 5일차 -->
+      <section id="day-5" class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hidden">
+        <div class="bg-indigo-50/70 p-4 border-b border-indigo-100">
+          <span class="text-[11px] font-black text-indigo-600 uppercase">DAY 5</span>
+          <h2 class="text-base font-bold text-slate-800">10/19 (월) 렌터카 반납 & 김해 귀국</h2>
+          <p class="text-xs text-slate-500">11:00 체크아웃 ➔ 16:00 렌터카 반납 ➔ 18:20 탑승(ZE952) ➔ 21:00 김해 도착</p>
+        </div>
+        <div class="p-4 space-y-3">
+          <div class="bg-rose-50/70 p-3 rounded-xl border border-rose-200">
+            <div class="text-[11px] text-rose-700 font-bold">16:00 렌터카 반납 (NIPPON Rent-A-Car)</div>
+            <div class="text-sm font-bold text-slate-800">니폰렌트카 신치토세 공항 영업소</div>
+            <div class="text-[11px] text-rose-600 font-semibold mt-0.5">⚠️ 반납 전 5km 이내 주유소에서 만유(Full) 필수 & 영수증 지참</div>
+            <div class="flex justify-end gap-1 mt-2">
+              <a href="https://www.google.com/maps/search/?api=1&query=Nippon+Rent-A-Car+New+Chitose+Airport" target="_blank" class="px-2 py-1 text-xs bg-white text-slate-700 rounded-lg border font-semibold">📍 위치</a>
+              <a href="https://www.google.com/maps/dir/?api=1&destination=Nippon+Rent-A-Car+New+Chitose+Airport&travelmode=driving" target="_blank" class="px-2 py-1 text-xs bg-blue-50 text-blue-700 border border-blue-200 rounded-lg font-bold">🚗 운전 내비</a>
+              <button onclick="openGallery('spot_d5_return', '렌터카 반납지점')" class="px-2 py-1 text-xs bg-indigo-50 text-indigo-700 rounded-lg border border-indigo-200 font-bold flex items-center gap-0.5">
+                <span>📸</span><span id="badge-spot_d5_return">0</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <div class="text-[11px] text-slate-500 font-bold">18:20 출발 (비행시간 약 2시간 40분)</div>
+            <div class="text-sm font-bold text-slate-800">이스타항공 ZE952 (신치토세 ➔ 김해)</div>
+            <div class="text-[11px] text-slate-500 font-medium mt-0.5">신치토세 국제선 청사 출국 수속 및 면세점 이용</div>
+            <div class="flex justify-end gap-1 mt-2">
+              <a href="https://www.google.com/maps/search/?api=1&query=New+Chitose+Airport+International+Terminal" target="_blank" class="px-2 py-1 text-xs bg-white text-slate-700 rounded-lg border font-semibold">📍 국제선 터미널</a>
+              <button onclick="openGallery('spot_d5_flight', '귀국 항공편 ZE952')" class="px-2 py-1 text-xs bg-indigo-50 text-indigo-700 rounded-lg border border-indigo-200 font-bold flex items-center gap-0.5">
+                <span>📸</span><span id="badge-spot_d5_flight">0</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-emerald-50/70 p-3.5 rounded-xl border border-emerald-200">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] text-emerald-700 font-extrabold flex items-center gap-1">
+                <span>🛬</span> 21:00 도착 예상
+              </span>
+              <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">여행 완료</span>
+            </div>
+            <div class="text-sm font-bold text-slate-800 mt-1">김해국제공항(PUS) 도착 & 귀가</div>
+            <div class="text-[11px] text-emerald-800 font-medium mt-0.5 leading-snug">
+              수하물 수취 및 세관 통과 ➔ 무사 귀가! 온 가족이 함께한 4박 5일 삿포로 여행 완료 🏠
+            </div>
+            <div class="flex justify-end gap-1 mt-2.5">
+              <a href="https://www.google.com/maps/search/?api=1&query=Gimhae+International+Airport" target="_blank" class="px-2 py-1 text-xs bg-white text-slate-700 rounded-lg border font-semibold">📍 김해공항 위치</a>
+              <button onclick="openGallery('spot_d5_gimhae', '김해공항 귀국')" class="px-2 py-1 text-xs bg-emerald-100/70 text-emerald-800 rounded-lg border border-emerald-200 font-bold flex items-center gap-0.5">
+                <span>📸</span><span id="badge-spot_d5_gimhae">0</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="dynamic-spots-day-5" class="space-y-3"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- [섹션 2] 체크리스트 탭 -->
+    <section id="checklistSection" class="p-4 space-y-4 max-w-lg mx-auto hidden">
+      <!-- 🚨 긴급 연락망 바로가기 배너 (체크리스트 상단 배치) -->
+      <div class="bg-gradient-to-r from-rose-500 to-rose-600 text-white rounded-2xl p-3.5 shadow-sm flex items-center justify-between border border-rose-400">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-lg shrink-0">
+            🚨
+          </div>
+          <div>
+            <h3 class="text-xs sm:text-sm font-extrabold leading-tight">일본 현지 긴급 연락처</h3>
+            <p class="text-[10.5px] text-rose-100 mt-0.5">경찰(110) · 구급(119) · 영사콜센터 연결</p>
+          </div>
+        </div>
+        <button onclick="openEmergencyModal()" class="shrink-0 bg-white text-rose-600 active:scale-95 text-xs font-black px-3 py-1.5 rounded-xl shadow-xs hover:bg-rose-50 transition">
+          연락망 열기
+        </button>
+      </div>
+
+      <div class="flex justify-between items-center px-1">
+        <span class="text-xs text-slate-500">준비물을 자유롭게 체크하고 관리하세요</span>
+        <button onclick="openPassportModal()" class="text-xs bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-extrabold px-3 py-1.5 rounded-xl shadow-xs transition flex items-center gap-1">
+          <span>🛂</span><span>여권사본</span>
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-sm p-4 border border-slate-200">
+        <h2 class="font-bold text-sm mb-3 text-slate-800 flex items-center justify-between">
+          <span class="flex items-center gap-1.5"><span>🚗</span> 렌터카 & 필수 서류</span>
+          <span class="text-[11px] text-slate-400 font-normal" id="count-docs"></span>
+        </h2>
+        <div id="checkgroup-docs" class="space-y-2 text-sm"></div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-sm p-4 border border-slate-200">
+        <h2 class="font-bold text-sm mb-3 text-slate-800 flex items-center justify-between">
+          <span class="flex items-center gap-1.5"><span>🧥</span> 10월 홋카이도/후라노 방한 복장</span>
+          <span class="text-[11px] text-slate-400 font-normal" id="count-clothes"></span>
+        </h2>
+        <div id="checkgroup-clothes" class="space-y-2 text-sm"></div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-sm p-4 border border-slate-200">
+        <h2 class="font-bold text-sm mb-3 text-slate-800 flex items-center justify-between">
+          <span class="flex items-center gap-1.5"><span>🔌</span> 전자기기 & 가족 비상 상비약</span>
+          <span class="text-[11px] text-slate-400 font-normal" id="count-etc"></span>
+        </h2>
+        <div id="checkgroup-etc" class="space-y-2 text-sm"></div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-sm p-4 border border-slate-200">
+        <h2 class="font-bold text-sm mb-3 text-slate-800 flex items-center justify-between">
+          <span class="flex items-center gap-1.5"><span>🎒</span> 기타 개인 준비물</span>
+          <span class="text-[11px] text-slate-400 font-normal" id="count-custom"></span>
+        </h2>
+        <div id="checkgroup-custom" class="space-y-2 text-sm"></div>
+      </div>
+    </section>
+
+    <!-- [섹션 3] Budget (예산) 탭 -->
+    <section id="budgetSection" class="p-4 space-y-4 max-w-lg mx-auto hidden">
+      <div class="bg-gradient-to-br from-slate-900 to-indigo-950 text-white rounded-2xl p-5 shadow-md">
+        <div class="flex justify-between items-start mb-3">
+          <div>
+            <span class="text-xs text-indigo-200">총 확정 및 예정 지출 합계</span>
+            <div class="text-2xl font-black mt-0.5 tracking-tight text-white" id="totalExpenseCalculated">₩0</div>
+          </div>
+          <div class="text-right">
+            <span class="text-[11px] text-slate-400">기준 환율</span>
+            <div class="text-xs font-bold text-amber-300 mt-0.5">100 JPY = 850 KRW</div>
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-slate-800 grid grid-cols-2 gap-2 text-xs">
+          <div class="bg-white/5 p-2 rounded-xl">
+            <div class="text-slate-400 text-[10px]">KR 원화(KRW) 결제분</div>
+            <div class="font-black text-white text-sm mt-0.5" id="totalKRWText">₩0</div>
+          </div>
+          <div class="bg-white/5 p-2 rounded-xl">
+            <div class="text-slate-400 text-[10px]">JP 엔화(JPY) 결제분</div>
+            <div class="font-black text-amber-300 text-sm mt-0.5" id="totalJPYText">¥0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 실시간 보유 잔액 수기 관리 카드 -->
+      <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
+        <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+          <div class="flex items-center gap-1.5">
+            <span class="text-base">💳</span>
+            <h3 class="text-xs font-bold text-slate-800">현재 남은 잔액 (수기 관리)</h3>
+          </div>
+          <span class="text-[10px] text-slate-400 font-medium">실시간 자동 저장</span>
+        </div>
+
+        <div class="space-y-2 text-xs">
+          <div class="flex items-center justify-between bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+            <label for="balanceEric" class="font-bold text-slate-700 flex items-center gap-1.5">
+              <span>💳</span> Eric의 체크카드
+            </label>
+            <div class="flex items-center gap-1">
+              <input 
+                type="number" 
+                id="balanceEric" 
+                oninput="saveAndRenderBalances()" 
+                placeholder="0" 
+                class="w-24 text-right bg-white border border-slate-300 rounded-lg px-2 py-1 font-black text-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" 
+              />
+              <span class="font-bold text-slate-500">엔</span>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+            <label for="balanceSua" class="font-bold text-slate-700 flex items-center gap-1.5">
+              <span>💳</span> Sua의 체크카드
+            </label>
+            <div class="flex items-center gap-1">
+              <input 
+                type="number" 
+                id="balanceSua" 
+                oninput="saveAndRenderBalances()" 
+                placeholder="0" 
+                class="w-24 text-right bg-white border border-slate-300 rounded-lg px-2 py-1 font-black text-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" 
+              />
+              <span class="font-bold text-slate-500">엔</span>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+            <label for="balanceCash" class="font-bold text-slate-700 flex items-center gap-1.5">
+              <span>💴</span> 현금
+            </label>
+            <div class="flex items-center gap-1">
+              <input 
+                type="number" 
+                id="balanceCash" 
+                oninput="saveAndRenderBalances()" 
+                placeholder="0" 
+                class="w-24 text-right bg-white border border-slate-300 rounded-lg px-2 py-1 font-black text-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" 
+              />
+              <span class="font-bold text-slate-500">엔</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-indigo-50/70 p-2.5 rounded-xl border border-indigo-100 flex justify-between items-center text-xs">
+          <span class="font-bold text-indigo-900">남은 잔액 총합계</span>
+          <div class="text-right">
+            <span class="font-black text-indigo-700 text-sm" id="totalRemainingJPY">¥0</span>
+            <span class="text-[10px] text-indigo-400 block" id="totalRemainingKRW">약 0원</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-center px-1">
+        <h3 class="text-sm font-bold text-slate-800">세부 지출 및 예약 내역</h3>
+        <button onclick="openAddExpenseModal()" class="text-xs bg-indigo-600 text-white font-bold px-3 py-1.5 rounded-lg shadow hover:bg-indigo-700">
+          + 현장 지출 추가
+        </button>
+      </div>
+
+      <div id="expenseListContainer" class="space-y-3"></div>
+    </section>
+  </div>
+
+  <!-- 🗺️ 포로클 자전거 투어 노선도 팝업 모달 -->
+  <div id="porocleRouteModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-3 hidden backdrop-blur-sm transition-opacity duration-200">
+    <div class="bg-white rounded-3xl w-full max-w-lg max-h-[92vh] flex flex-col shadow-2xl border border-indigo-100 overflow-hidden">
+      <div class="p-4 border-b border-slate-100 bg-gradient-to-r from-indigo-50 to-slate-50 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-base font-bold shadow-xs">
+            🚲
+          </div>
+          <div>
+            <h3 class="font-extrabold text-sm sm:text-base text-slate-800">10/16 삿포로 포로클 추천 라이딩 루트</h3>
+            <p class="text-[11px] text-indigo-600 font-bold">서3초메도리 경유 순환 • 12.8 km • 자전거 약 58분</p>
+          </div>
+        </div>
+        <button onclick="closePorocleRouteModal()" class="text-slate-400 hover:text-slate-700 p-1.5 text-lg font-bold leading-none">✕</button>
+      </div>
+
+      <div class="p-4 overflow-y-auto space-y-4 flex-1 text-xs">
+        <div class="bg-slate-50 rounded-2xl p-3 border border-slate-200 relative overflow-hidden shadow-inner">
+          <div class="flex justify-between items-center mb-1 text-[11px]">
+            <span class="font-extrabold text-slate-700 flex items-center gap-1"><span>🗺️</span> 삿포로 시내 순환 루트 맵</span>
+            <span class="text-[10px] bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded-full">화살표 방향 순환 코스</span>
+          </div>
+          <svg viewBox="0 0 500 520" class="w-full h-auto max-h-[340px] select-none">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#3b82f6"/>
+              </marker>
+            </defs>
+
+            <rect x="0" y="0" width="500" height="520" fill="#f8fafc" rx="12"/>
+            <path d="M 40 100 L 460 100 M 40 160 L 460 160 M 40 220 L 460 220 M 40 280 L 460 280 M 40 340 L 460 340 M 40 420 L 460 420" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <path d="M 120 40 L 120 480 M 200 40 L 200 480 M 280 40 L 280 480 M 360 40 L 360 480" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="4,4"/>
+
+            <path d="M 490 200 Q 420 300 370 420 T 360 510" fill="none" stroke="#bae6fd" stroke-width="26" stroke-linecap="round"/>
+            <text x="415" y="340" fill="#0284c7" font-size="10" font-weight="bold" transform="rotate(65 415 340)">도요히라강 수변 자전거로 ➔</text>
+
+            <rect x="110" y="30" width="90" height="65" rx="8" fill="#dcfce7" stroke="#86efac" stroke-width="1"/>
+            <text x="120" y="55" fill="#15803d" font-size="9" font-weight="bold">홋카이도 대학</text>
+            <text x="120" y="70" fill="#16a34a" font-size="8">가로수길 캠퍼스</text>
+
+            <rect x="90" y="245" width="220" height="18" rx="4" fill="#dcfce7" stroke="#86efac" stroke-width="1"/>
+            <text x="160" y="258" fill="#15803d" font-size="9" font-weight="bold">오도리 공원 (大通公園)</text>
+
+            <rect x="180" y="440" width="110" height="65" rx="10" fill="#dcfce7" stroke="#86efac" stroke-width="1"/>
+            <circle cx="255" cy="470" r="14" fill="#bfdbfe"/>
+            <text x="240" y="473" fill="#1d4ed8" font-size="8">쇼부 연못</text>
+            <text x="195" y="495" fill="#15803d" font-size="9" font-weight="bold">나카지마 공원</text>
+
+            <line x1="60" y1="135" x2="450" y2="135" stroke="#94a3b8" stroke-width="3" stroke-dasharray="8,6"/>
+            <text x="65" y="130" fill="#64748b" font-size="8" font-weight="bold">JR 삿포로 철길</text>
+
+            <path d="M 280 250 L 250 225 L 190 205 L 185 175 L 165 75 L 205 75 L 220 135 L 390 95 L 395 125 L 430 160 L 425 210 L 370 340 L 260 450 L 230 465 L 220 420 L 215 365 L 190 320 L 160 270" fill="none" stroke="#2563eb" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" marker-mid="url(#arrow)"/>
+
+            <path d="M 160 270 L 280 250" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,4"/>
+
+            <g transform="translate(280, 250)">
+              <circle cx="0" cy="0" r="10" fill="#dc2626" stroke="#fff" stroke-width="2" filter="drop-shadow(0 2px 3px rgba(0,0,0,0.2))"/>
+              <text x="0" y="3.5" fill="#fff" font-size="9" font-weight="bold" text-anchor="middle">1</text>
+              <rect x="8" y="-18" width="85" height="14" rx="3" fill="#ffffff" stroke="#dc2626" stroke-width="1"/>
+              <text x="12" y="-8" fill="#b91c1c" font-size="8" font-weight="bold">① 삿포로 TV타워 (출발)</text>
+            </g>
+
+            <g transform="translate(250, 225)">
+              <circle cx="0" cy="0" r="9" fill="#2563eb" stroke="#fff" stroke-width="2"/>
+              <text x="0" y="3" fill="#fff" font-size="8" font-weight="bold" text-anchor="middle">2</text>
+              <text x="12" y="2" fill="#1e3a8a" font-size="8" font-weight="bold">② 시계탑</text>
+            </g>
+
+            <g transform="translate(190, 205)">
+              <circle cx="0" cy="0" r="9" fill="#2563eb" stroke="#fff" stroke-width="2"/>
+              <text x="0" y="3" fill="#fff" font-size="8" font-weight="bold" text-anchor="middle">3</text>
+              <text x="-58" y="2" fill="#1e3a8a" font-size="8" font-weight="bold">③ 아카렌가</text>
+            </g>
+
+            <g transform="translate(185, 175)">
+              <circle cx="0" cy="0" r="9" fill="#2563eb" stroke="#fff" stroke-width="2"/>
+              <text x="0" y="3" fill="#fff" font-size="8" font-weight="bold" text-anchor="middle">4</text>
+              <text x="-64" y="2" fill="#1e3a8a" font-size="8" font-weight="bold">④ 롯카테이 본점</text>
+            </g>
+
+            <g transform="translate(165, 75)">
+              <circle cx="0" cy="0" r="9" fill="#2563eb" stroke="#fff" stroke-width="2"/>
+              <text x="0" y="3" fill="#fff" font-size="8" font-weight="bold" text-anchor="middle">5</text>
+              <text x="-66" y="2" fill="#1e3a8a" font-size="8" font-weight="bold">⑤ 홋카이도 대학</text>
+            </g>
+
+            <g transform="translate(220, 135)">
+              <circle cx="0" cy="0" r="9" fill="#059669" stroke="#fff" stroke-width="2"/>
+              <text x="0" y="3" fill="#fff" font-size="8" font-weight="bold" text-anchor="middle">6</text>
+              <text x="11" y="2" fill="#065f46" font-size="8" font-weight="bold">⑥ 잇핀 (점심)</text>
+            </g>
+
+            <g transform="translate(390, 95)">
+              <circle cx="0" cy="0" r="9" fill="#2563eb" stroke="#fff" stroke-width="2"/>
+              <text x="0" y="3" fill="#fff" font-size="8" font-weight="bold" text-anchor="middle">7</text>
+              <rect x="-85" y="-16" width="80" height="13" rx="3" fill="#ffffff" stroke="#2563eb" stroke-width="1"/>
+              <text x="-81" y="-7" fill="#1d4ed8" font-size="7.5" font-weight="bold">⑦ 삿포로 맥주박물관</text>
+            </g>
+
+            <g transform="translate(230, 465)">
+              <circle cx="0" cy="0" r="9" fill="#2563eb" stroke="#fff" stroke-width="2"/>
+              <text x="0" y="3" fill="#fff" font-size="8" font-weight="bold" text-anchor="middle">8</text>
+              <text x="-70" y="2" fill="#1e3a8a" font-size="8" font-weight="bold">⑧ 삿포로시 천문대</text>
+            </g>
+
+            <g transform="translate(215, 365)">
+              <circle cx="0" cy="0" r="9" fill="#059669" stroke="#fff" stroke-width="2"/>
+              <text x="0" y="3" fill="#fff" font-size="8" font-weight="bold" text-anchor="middle">9</text>
+              <text x="-64" y="2" fill="#065f46" font-size="8" font-weight="bold">⑨ 니기리메시(간식)</text>
+            </g>
+
+            <g transform="translate(160, 270)">
+              <circle cx="0" cy="0" r="10" fill="#d97706" stroke="#fff" stroke-width="2"/>
+              <text x="0" y="3.5" fill="#fff" font-size="8" font-weight="bold" text-anchor="middle">10</text>
+              <rect x="-105" y="-18" width="98" height="14" rx="3" fill="#ffffff" stroke="#d97706" stroke-width="1"/>
+              <text x="-101" y="-8" fill="#b45309" font-size="7.5" font-weight="bold">⑩ 홀리데이 인 (호텔 복귀)</text>
+            </g>
+          </svg>
+        </div>
+
+        <div class="space-y-2">
+          <div class="font-extrabold text-slate-800 text-xs flex items-center justify-between">
+            <span class="flex items-center gap-1"><span>🚴</span> 추천 라이딩 순환 동선 순서</span>
+            <span class="text-[10px] text-indigo-600 font-bold">총 10개 거점</span>
+          </div>
+
+          <div class="grid grid-cols-1 gap-1.5 text-[11px]">
+            <div class="p-2 rounded-xl bg-rose-50/70 border border-rose-200 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-rose-600 text-white font-black text-[10px] flex items-center justify-center shrink-0">1</span>
+                <div>
+                  <div class="font-bold text-slate-800">삿포로 테레비탑 (출발 거점)</div>
+                  <div class="text-[10px] text-rose-700">1층 안내소에서 포로클 실물 IC 카드 수령/교환</div>
+                </div>
+              </div>
+              <span class="text-[10px] bg-white px-2 py-0.5 rounded-md text-slate-600 font-bold border">출발</span>
+            </div>
+
+            <div class="p-2 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-indigo-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0">2</span>
+                <span class="font-bold text-slate-800">삿포로시 시계탑</span>
+              </div>
+              <span class="text-[10px] text-slate-400">도보/자전거 2분</span>
+            </div>
+
+            <div class="p-2 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-indigo-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0">3</span>
+                <span class="font-bold text-slate-800">홋카이도청 구 본청사 (아카렌가)</span>
+              </div>
+              <span class="text-[10px] text-slate-400">붉은 벽돌 & 연못 정원</span>
+            </div>
+
+            <div class="p-2 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-indigo-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0">4</span>
+                <span class="font-bold text-slate-800">롯카테이 삿포로 본점</span>
+              </div>
+              <span class="text-[10px] text-slate-400">마루세이 버터샌드 티타임</span>
+            </div>
+
+            <div class="p-2 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-indigo-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0">5</span>
+                <span class="font-bold text-slate-800">홋카이도 대학 (은행나무 가로수길)</span>
+              </div>
+              <span class="text-[10px] text-slate-400">평탄한 힐링 라이딩</span>
+            </div>
+
+            <div class="p-2 rounded-xl bg-emerald-50/70 border border-emerald-200 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-emerald-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0">6</span>
+                <div>
+                  <div class="font-bold text-slate-800">도카치 부타돈 잇핀 (점심 식사)</div>
+                  <div class="text-[10px] text-emerald-700">스텔라플레이스 6층 숯불 돼지고기 덮밥</div>
+                </div>
+              </div>
+              <span class="text-[10px] bg-white px-2 py-0.5 rounded-md text-emerald-800 font-bold border">점심</span>
+            </div>
+
+            <div class="p-2 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-indigo-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0">7</span>
+                <span class="font-bold text-slate-800">삿포로 맥주 박물관 (동쪽 반환점)</span>
+              </div>
+              <span class="text-[10px] text-slate-400">붉은 벽돌 & 생맥주 시음</span>
+            </div>
+
+            <div class="p-2 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-indigo-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0">8</span>
+                <div>
+                  <div class="font-bold text-slate-800">삿포로시 천문대 (나카지마 공원)</div>
+                  <div class="text-[10px] text-slate-500">도요히라강 수변길 남하 ➔ 쇼부 연못 산책</div>
+                </div>
+              </div>
+              <span class="text-[10px] text-slate-400">수변 라이딩</span>
+            </div>
+
+            <div class="p-2 rounded-xl bg-emerald-50/70 border border-emerald-200 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-emerald-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0">9</span>
+                <div>
+                  <div class="font-bold text-slate-800">니기리메시 (스스키노 수제 주먹밥)</div>
+                  <div class="text-[10px] text-emerald-700">크림치즈 명란 & 즉석 주먹밥 간식 포장</div>
+                </div>
+              </div>
+              <span class="text-[10px] bg-white px-2 py-0.5 rounded-md text-emerald-800 font-bold border">간식</span>
+            </div>
+
+            <div class="p-2 rounded-xl bg-amber-50/70 border border-amber-200 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-5 h-5 rounded-full bg-amber-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0">10</span>
+                <div>
+                  <div class="font-bold text-slate-800">홀리데이 인 & 스위트 삿포로 오도리 공원</div>
+                  <div class="text-[10px] text-amber-700">라이딩 완료 & 호텔 자전거 반납 복귀</div>
+                </div>
+              </div>
+              <span class="text-[10px] bg-white px-2 py-0.5 rounded-md text-amber-800 font-bold border">완주</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-3 bg-slate-50 border-t border-slate-100 flex items-center gap-2">
+        <a href="https://www.google.com/maps/dir/?api=1&origin=Sapporo+TV+Tower&destination=Holiday+Inn+and+Suites+Sapporo+Odori+Park&waypoints=Sapporo+Clock+Tower%7CFormer+Hokkaido+Government+Office%7CRokkatei+Sapporo%7CHokkaido+University%7CTokachi+Butadon+Ippin+Stellar+Place%7CSapporo+Beer+Museum%7CSapporo+Astronomical+Observatory%7CNigirimeshi+Sapporo&travelmode=bicycling" target="_blank" class="flex-1 py-2.5 text-center text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow transition active:scale-95 flex items-center justify-center gap-1">
+          <span>📍</span><span>구글 지도 실시간 자전거 내비 열기</span>
+        </a>
+        <button onclick="closePorocleRouteModal()" class="py-2.5 px-4 text-xs bg-slate-200 hover:bg-slate-300 font-bold rounded-xl text-slate-700 transition">
+          닫기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⚠️ 포로클(Porocle) 이용 & 라이딩 주의사항 팝업 모달 -->
+  <div id="porocleNoticeModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-3 hidden backdrop-blur-sm transition-opacity duration-200">
+    <div class="bg-white rounded-3xl w-full max-w-lg max-h-[90vh] flex flex-col shadow-2xl border border-amber-200 overflow-hidden">
+      <!-- 모달 헤더 -->
+      <div class="p-4 border-b border-slate-100 bg-gradient-to-r from-amber-50 to-orange-50 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center text-base font-black shadow-xs">
+            ⚠️
+          </div>
+          <div>
+            <h3 class="font-extrabold text-sm sm:text-base text-slate-900">포로클(Porocle) 이용 & 라이딩 주의사항</h3>
+            <p class="text-[11px] text-amber-800 font-bold">카드 교환 • 주행 수칙 • 잠시 멈춤 vs 최종 반납</p>
+          </div>
+        </div>
+        <button onclick="closePorocleNoticeModal()" class="text-slate-400 hover:text-slate-700 p-1.5 text-lg font-bold leading-none">✕</button>
+      </div>
+
+      <!-- 모달 본문 -->
+      <div class="p-4 overflow-y-auto space-y-3.5 flex-1 text-xs">
+        <!-- 1. 카드 교환 & 대여 방법 -->
+        <div class="bg-indigo-50/70 p-3.5 rounded-2xl border border-indigo-100 space-y-2">
+          <div class="flex items-center gap-1.5 text-indigo-900 font-black text-xs">
+            <span class="w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px]">1</span>
+            <span>실물 카드 교환 & 시작 (터치 & 라이드)</span>
+          </div>
+          <div class="space-y-1.5 pl-6 text-slate-700 leading-relaxed text-[11.5px]">
+            <div>
+              <span class="font-bold text-slate-900">📍 실물 카드 교환 장소:</span> 삿포로 TV타워 1층 관광안내소<br/>
+              <span class="text-[10.5px] text-rose-600 font-semibold">🕒 운영시간: 09:30 ~ 18:30 (이른 아침 출발 시 전날 교환 필수)</span>
+            </div>
+            <div>
+              <span class="font-bold text-slate-900">🚀 자전거 언락 방법:</span> 제어판의 <span class="bg-indigo-600 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">START</span> 버튼 클릭 ➔ <span class="font-bold text-indigo-700">IC 카드 터치</span> ➔ 뒷바퀴 잠금장치 자동 해제
+            </div>
+            <div class="bg-white/80 p-2 rounded-xl text-[11px] text-slate-600 border border-indigo-100/60">
+              💡 <span class="font-bold text-indigo-900">탑승 전 필수 점검:</span> 배터리 잔량 표시와 안장 높이를 반드시 확인하고 출발하세요!
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. 도로 주행 3대 수칙 -->
+        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2">
+          <div class="flex items-center gap-1.5 text-slate-900 font-black text-xs">
+            <span class="w-5 h-5 rounded-full bg-slate-800 text-white flex items-center justify-center text-[10px]">2</span>
+            <span>삿포로 안전 주행 3대 원칙</span>
+          </div>
+          <div class="space-y-2 pl-1 text-[11.5px]">
+            <div class="flex items-start gap-2 bg-white p-2.5 rounded-xl border border-slate-200">
+              <span class="text-rose-600 font-black shrink-0 text-sm">❶</span>
+              <div>
+                <span class="font-bold text-slate-900">차도 좌측 통행 (역주행 절대 금지)</span>
+                <p class="text-[11px] text-slate-600 mt-0.5">일본 도로교통법상 자전거는 경차량(Light Vehicle)입니다. 반드시 <span class="font-semibold text-rose-600">차도의 좌측</span>으로만 주행해야 합니다.</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-2 bg-white p-2.5 rounded-xl border border-slate-200">
+              <span class="text-indigo-600 font-black shrink-0 text-sm">❷</span>
+              <div>
+                <span class="font-bold text-slate-900">보행자 절대 우선</span>
+                <p class="text-[11px] text-slate-600 mt-0.5">인도는 표지판이 있는 예외적 상황에만 진입 가능합니다. 진입 시 <span class="font-semibold text-indigo-700">보행자가 최우선</span>이며, 차도 쪽으로 반드시 서행해야 합니다.</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-2 bg-rose-50/70 p-2.5 rounded-xl border border-rose-200">
+              <span class="text-rose-600 font-black shrink-0 text-sm">❸</span>
+              <div>
+                <span class="font-bold text-rose-900">방치 금지 구역 경고 (견인 벌금 3,000엔)</span>
+                <p class="text-[11px] text-rose-800 mt-0.5">삿포로역 및 오도리 공원 주변 도로는 주차 방치 금지 구역입니다. 포트 외 무단 주차 시 <span class="font-bold underline">견인 비용(3,000엔) 및 대여 요금이 계속 청구</span>됩니다.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. 주차의 정석 (잠시 멈춤 vs 최종 반납) -->
+        <div class="bg-amber-50/60 p-3.5 rounded-2xl border border-amber-200 space-y-2">
+          <div class="flex items-center gap-1.5 text-amber-950 font-black text-xs">
+            <span class="w-5 h-5 rounded-full bg-amber-600 text-white flex items-center justify-center text-[10px]">3</span>
+            <span>주차의 정석: 잠시 멈춤 vs 최종 반납</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
+            <!-- 일시 정지 -->
+            <div class="bg-white p-2.5 rounded-xl border border-slate-200">
+              <div class="font-bold text-slate-800 flex items-center gap-1 mb-1">
+                <span>⏸️</span><span>일시 정지 (Pause)</span>
+              </div>
+              <p class="text-slate-600 leading-snug">관광지나 카페 방문 시:</p>
+              <div class="bg-slate-50 p-2 rounded-lg mt-1 font-semibold text-slate-700 border border-slate-100">
+                • 수동으로 뒷바퀴 잠금 레버 내리기<br/>
+                • 재탑승: <span class="text-indigo-600 font-bold">START 클릭 + IC 카드 터치</span>
+              </div>
+            </div>
+
+            <!-- 완전 반납 -->
+            <div class="bg-white p-2.5 rounded-xl border border-rose-300">
+              <div class="font-bold text-rose-700 flex items-center gap-1 mb-1">
+                <span>🔄</span><span>완전 반납 (Return)</span>
+              </div>
+              <p class="text-slate-600 leading-snug">라이딩 종료 시:</p>
+              <div class="bg-rose-50/50 p-2 rounded-lg mt-1 font-semibold text-slate-800 border border-rose-100">
+                1. 지정된 포트(Port)에 주차<br/>
+                2. 뒷바퀴 잠금 레버 내리기<br/>
+                3. 제어판 <span class="bg-rose-600 text-white px-1 py-0.2 rounded text-[10px] font-bold">RETURN</span> 버튼 클릭<br/>
+                <span class="text-emerald-700 font-extrabold">★ 초록색 불 점등 확인 필수!</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 모달 하단 버튼 -->
+      <div class="p-3 bg-slate-50 border-t border-slate-100 flex items-center justify-end">
+        <button onclick="closePorocleNoticeModal()" class="w-full py-2.5 text-xs bg-slate-800 hover:bg-slate-900 active:scale-95 font-bold rounded-xl text-white shadow transition">
+          확인했습니다 (닫기)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🛂 여권사본 및 국제운전면허증 뷰어 팝업 모달 -->
+  <div id="passportModal" class="fixed inset-0 bg-black/75 z-50 flex items-center justify-center p-3 hidden backdrop-blur-sm transition-opacity duration-200">
+    <div class="bg-white rounded-3xl w-full max-w-lg max-h-[92vh] flex flex-col shadow-2xl border border-indigo-100 overflow-hidden">
+      <!-- 모달 헤더 -->
+      <div class="p-3.5 border-b border-slate-100 bg-gradient-to-r from-indigo-50 to-slate-50 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-sm font-bold shadow-xs">
+            🛂
+          </div>
+          <div>
+            <h3 class="font-extrabold text-sm sm:text-base text-slate-800">가족 여권 & 국제면허증 사본</h3>
+            <p class="text-[10.5px] text-indigo-600 font-bold">터치하여 크게 확대해 보실 수 있습니다</p>
+          </div>
+        </div>
+        <button onclick="closePassportModal()" class="text-slate-400 hover:text-slate-700 p-1.5 text-lg font-bold leading-none">✕</button>
+      </div>
+
+      <!-- 탭 및 이미지 갤러리 리스트 -->
+      <div class="p-4 overflow-y-auto space-y-4 flex-1 text-xs">
+        <!-- 1. 여권 사본 섹션 -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between pb-1 border-b border-slate-100">
+            <h4 class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
+              <span>📘</span> 대한민국 전자여권 사본 (3인)
+            </h4>
+            <span class="text-[10px] text-slate-400 font-medium">유효기간 확인 완료</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <!-- 1) 김수아 -->
+            <div class="bg-slate-50 rounded-2xl p-2.5 border border-slate-200 flex flex-col items-center">
+              <div class="w-full aspect-[4/3] rounded-xl overflow-hidden bg-slate-200 relative cursor-pointer group shadow-2xs" onclick="viewPassportDoc(0)">
+                <img src="" id="passImg-0" alt="김수아 여권" class="w-full h-full object-cover group-hover:scale-105 transition duration-150" />
+                <div class="absolute bottom-1 right-1 bg-black/60 text-white text-[9px] px-1.5 py-0.5 rounded font-bold">확대 🔍</div>
+              </div>
+              <div class="mt-2 text-center w-full">
+                <div class="font-extrabold text-slate-800 text-xs">김수아 (KIM SUA)</div>
+                <div class="text-[10px] text-indigo-600 font-semibold mt-0.5">여권: M748P8625</div>
+                <div class="text-[9.5px] text-slate-400 mt-0.5">만료: 2033.03.27</div>
+              </div>
+            </div>
+
+            <!-- 2) 김유성 -->
+            <div class="bg-slate-50 rounded-2xl p-2.5 border border-slate-200 flex flex-col items-center">
+              <div class="w-full aspect-[4/3] rounded-xl overflow-hidden bg-slate-200 relative cursor-pointer group shadow-2xs" onclick="viewPassportDoc(1)">
+                <img src="" id="passImg-1" alt="김유성 여권" class="w-full h-full object-cover group-hover:scale-105 transition duration-150" />
+                <div class="absolute bottom-1 right-1 bg-black/60 text-white text-[9px] px-1.5 py-0.5 rounded font-bold">확대 🔍</div>
+              </div>
+              <div class="mt-2 text-center w-full">
+                <div class="font-extrabold text-slate-800 text-xs">김유성 (KIM YOOSUNG)</div>
+                <div class="text-[10px] text-indigo-600 font-semibold mt-0.5">여권: M498P9048</div>
+                <div class="text-[9.5px] text-slate-400 mt-0.5">만료: 2028.03.27</div>
+              </div>
+            </div>
+
+            <!-- 3) 김장식 -->
+            <div class="bg-slate-50 rounded-2xl p-2.5 border border-slate-200 flex flex-col items-center">
+              <div class="w-full aspect-[4/3] rounded-xl overflow-hidden bg-slate-200 relative cursor-pointer group shadow-2xs" onclick="viewPassportDoc(2)">
+                <img src="" id="passImg-2" alt="김장식 여권" class="w-full h-full object-cover group-hover:scale-105 transition duration-150" />
+                <div class="absolute bottom-1 right-1 bg-black/60 text-white text-[9px] px-1.5 py-0.5 rounded font-bold">확대 🔍</div>
+              </div>
+              <div class="mt-2 text-center w-full">
+                <div class="font-extrabold text-slate-800 text-xs">김장식 (KIM JANGSIK)</div>
+                <div class="text-[10px] text-indigo-600 font-semibold mt-0.5">여권: M902J1290</div>
+                <div class="text-[9.5px] text-slate-400 mt-0.5">만료: 2033.02.16</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. 국제운전면허증 섹션 -->
+        <div class="space-y-2 pt-2">
+          <div class="flex items-center justify-between pb-1 border-b border-slate-100">
+            <h4 class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
+              <span>🚗</span> 국제운전면허증 사본 (김장식)
+            </h4>
+            <span class="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold">B종 승용차량 운전가능</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <!-- 1) 표지 -->
+            <div class="bg-slate-50 rounded-2xl p-2.5 border border-slate-200 flex flex-col items-center">
+              <div class="w-full aspect-[4/3] rounded-xl overflow-hidden bg-slate-200 relative cursor-pointer group shadow-2xs" onclick="viewPassportDoc(3)">
+                <img src="" id="passImg-3" alt="국제운전면허증 표지" class="w-full h-full object-cover group-hover:scale-105 transition duration-150" />
+                <div class="absolute bottom-1 right-1 bg-black/60 text-white text-[9px] px-1.5 py-0.5 rounded font-bold">확대 🔍</div>
+              </div>
+              <div class="mt-2 text-center w-full">
+                <div class="font-extrabold text-slate-800 text-xs">국제면허증 표지</div>
+                <div class="text-[10px] text-slate-500 font-medium mt-0.5">발급: 부산경찰청 (2026.10.07)</div>
+              </div>
+            </div>
+
+            <!-- 2) 유효기간 및 차량구분 면 -->
+            <div class="bg-slate-50 rounded-2xl p-2.5 border border-slate-200 flex flex-col items-center">
+              <div class="w-full aspect-[4/3] rounded-xl overflow-hidden bg-slate-200 relative cursor-pointer group shadow-2xs" onclick="viewPassportDoc(4)">
+                <img src="" id="passImg-4" alt="국제면허증 유효기간면" class="w-full h-full object-cover group-hover:scale-105 transition duration-150" />
+                <div class="absolute bottom-1 right-1 bg-black/60 text-white text-[9px] px-1.5 py-0.5 rounded font-bold">확대 🔍</div>
+              </div>
+              <div class="mt-2 text-center w-full">
+                <div class="font-extrabold text-slate-800 text-xs">유효기간 & 주의사항</div>
+                <div class="text-[10px] text-indigo-600 font-semibold mt-0.5">유효: ~2027.10.07</div>
+              </div>
+            </div>
+
+            <!-- 3) 사진 및 서명 면 -->
+            <div class="bg-slate-50 rounded-2xl p-2.5 border border-slate-200 flex flex-col items-center">
+              <div class="w-full aspect-[4/3] rounded-xl overflow-hidden bg-slate-200 relative cursor-pointer group shadow-2xs" onclick="viewPassportDoc(5)">
+                <img src="" id="passImg-5" alt="국제면허증 사진면" class="w-full h-full object-cover group-hover:scale-105 transition duration-150" />
+                <div class="absolute bottom-1 right-1 bg-black/60 text-white text-[9px] px-1.5 py-0.5 rounded font-bold">확대 🔍</div>
+              </div>
+              <div class="mt-2 text-center w-full">
+                <div class="font-extrabold text-slate-800 text-xs">사진 & 인가 스탬프</div>
+                <div class="text-[10px] text-emerald-700 font-semibold mt-0.5">B종(승용차) 스탬프 날인</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-[11px] text-amber-900 leading-relaxed">
+          💡 <strong>렌터카 현장 대여 시 팁:</strong> 일본 렌터카 인수 시 <strong>여권 원본 + 국제운전면허증 원본 + 한국 운전면허증 원본</strong> 3가지를 반드시 함께 제시해야 합니다. 본 사본은 분실 대비 및 긴급 확인용입니다.
+        </div>
+      </div>
+
+      <!-- 모달 닫기 버튼 -->
+      <div class="p-3 bg-slate-50 border-t border-slate-100 flex items-center justify-end">
+        <button onclick="closePassportModal()" class="w-full py-2.5 text-xs bg-slate-800 hover:bg-slate-900 active:scale-95 font-bold rounded-xl text-white shadow transition">
+          닫기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 준비물 추가 모달 -->
+  <div id="addCheckModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl p-5 w-full max-w-sm space-y-4 shadow-xl">
+      <h3 class="font-bold text-base text-slate-800">📋 새 준비물 추가</h3>
+      <div>
+        <label class="block text-xs font-semibold text-slate-500 mb-1">카테고리</label>
+        <select id="checkCategory" class="w-full border rounded-xl p-2.5 text-sm bg-slate-50">
+          <option value="docs">🚗 렌터카 & 필수 서류</option>
+          <option value="clothes">🧥 10월 홋카이도/후라노 방한 복장</option>
+          <option value="etc">🔌 전자기기 & 가족 비상 상비약</option>
+          <option value="custom">🎒 기타 개인 준비물</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-500 mb-1">준비물 이름</label>
+        <input type="text" id="checkItemText" placeholder="예: 텀블러, 삼각대, 손난로" class="w-full border rounded-xl p-2.5 text-sm" />
+      </div>
+      <div class="flex space-x-2 pt-2">
+        <button onclick="closeAddCheckModal()" class="flex-1 py-2.5 text-xs bg-slate-100 font-semibold rounded-xl text-slate-600">취소</button>
+        <button onclick="saveNewCheckItem()" class="flex-1 py-2.5 text-xs bg-amber-500 font-bold rounded-xl text-slate-900">추가하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 스팟/맛집 추가 모달 -->
+  <div id="addSpotModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl p-5 w-full max-w-sm space-y-4 shadow-xl">
+      <h3 class="font-bold text-base text-slate-800">📍 새 스팟 / 맛집 추가</h3>
+      <div>
+        <label class="block text-xs font-semibold text-slate-500 mb-1">일정 날짜</label>
+        <select id="modalDate" class="w-full border rounded-xl p-2.5 text-sm bg-slate-50">
+          <option value="day-1">10/15(목) - 1일차</option>
+          <option value="day-2">10/16(금) - 2일차</option>
+          <option value="day-3">10/17(토) - 3일차</option>
+          <option value="day-4">10/18(일) - 4일차</option>
+          <option value="day-5">10/19(월) - 5일차</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-500 mb-1">구분</label>
+        <select id="modalCategory" class="w-full border rounded-xl p-2.5 text-sm bg-slate-50">
+          <option value="lunch">🍱 점심 (Lunch)</option>
+          <option value="dinner">🍽️ 저녁 (Dinner)</option>
+          <option value="spot">📍 관광 스팟 / 카페</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-500 mb-1">장소명 / 상호명</label>
+        <input type="text" id="modalName" placeholder="예: 비에이 준페이, 징기스칸 다루마" class="w-full border rounded-xl p-2.5 text-sm" />
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-500 mb-1">구글 지도 링크 (선택)</label>
+        <input type="text" id="modalMapUrl" placeholder="장소 링크를 복사해 주세요" class="w-full border rounded-xl p-2.5 text-sm text-slate-700 placeholder:text-slate-400 placeholder:opacity-60 bg-slate-50" />
+        <p class="text-[10px] text-slate-400 mt-1">구글 지도 앱에서 [공유 ➔ 링크 복사]한 URL을 붙여넣으면 정확한 핀으로 연결됩니다.</p>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-500 mb-1">메모 (선택)</label>
+        <input type="text" id="modalMemo" placeholder="예: 추천 메뉴, 주차장 정보" class="w-full border rounded-xl p-2.5 text-sm" />
+      </div>
+      <div class="flex space-x-2 pt-2">
+        <button onclick="closeAddSpotModal()" class="flex-1 py-2.5 text-xs bg-slate-100 font-semibold rounded-xl text-slate-600">취소</button>
+        <button onclick="saveNewSpot()" class="flex-1 py-2.5 text-xs bg-indigo-600 font-bold rounded-xl text-white">추가하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 지출 추가 모달 -->
+  <div id="addExpenseModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl p-5 w-full max-w-sm space-y-4 shadow-xl">
+      <h3 class="font-bold text-base text-slate-800">💰 현장 지출 내역 추가</h3>
+      <div>
+        <label class="block text-xs font-semibold text-slate-500 mb-1">날짜</label>
+        <select id="expDate" class="w-full border rounded-xl p-2.5 text-sm bg-slate-50">
+          <option value="10/15(목)">10/15(목) - 1일차</option>
+          <option value="10/16(금)">10/16(금) - 2일차</option>
+          <option value="10/17(토)">10/17(토) - 3일차</option>
+          <option value="10/18(일)">10/18(일) - 4일차</option>
+          <option value="10/19(월)">10/19(월) - 5일차</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-500 mb-1">카테고리</label>
+        <select id="expCategory" class="w-full border rounded-xl p-2.5 text-sm bg-slate-50">
+          <option value="식비">🍱 식비 (점심/저녁/간식)</option>
+          <option value="교통/주유">🚗 교통 / 주유 / 톨비</option>
+          <option value="쇼핑">🛍️ 편의점 / 쇼핑</option>
+          <option value="기타">🎟️ 입장료 / 기타</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-500 mb-1">내용 / 항목명</label>
+        <input type="text" id="expTitle" placeholder="예: 세븐일레븐 간식, 주유비" class="w-full border rounded-xl p-2.5 text-sm" />
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-500 mb-1">엔화 금액 (JPY)</label>
+        <input type="number" id="expAmountJPY" placeholder="3000" class="w-full border rounded-xl p-2.5 text-sm font-bold" />
+      </div>
+      <div class="flex space-x-2 pt-2">
+        <button onclick="closeAddExpenseModal()" class="flex-1 py-2.5 text-xs bg-slate-100 font-semibold rounded-xl text-slate-600">취소</button>
+        <button onclick="saveNewExpense()" class="flex-1 py-2.5 text-xs bg-emerald-600 font-bold rounded-xl text-white">저장하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 갤러리 모달 -->
+  <div id="photoGalleryModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-3 hidden">
+    <div class="bg-white rounded-2xl w-full max-w-md max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+        <div>
+          <h3 id="gallerySpotTitle" class="font-bold text-sm text-slate-800">스팟 앨범</h3>
+          <p class="text-[11px] text-slate-500">기기에 안전하게 보관됩니다 (터치 시 확대 및 저장)</p>
+        </div>
+        <button onclick="closeGalleryModal()" class="text-slate-400 hover:text-slate-700 text-base p-1 font-bold">✕</button>
+      </div>
+      <div id="galleryPhotoGrid" class="p-4 overflow-y-auto flex-1 grid grid-cols-3 gap-2"></div>
+      <div class="p-3 border-t border-slate-100 bg-slate-50 flex items-center justify-end gap-2">
+        <button onclick="triggerAlbumInput()" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 active:scale-95 text-xs font-bold px-3 py-2 rounded-xl shadow-xs flex items-center gap-1 transition">
+          <span>🖼️</span><span>폰 앨범 선택</span>
+        </button>
+        <button onclick="triggerCameraInput()" class="bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white text-xs font-bold px-3 py-2 rounded-xl shadow flex items-center gap-1 transition">
+          <span>📷</span><span>즉시 촬영</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 사진 상세 확대 & 폰 갤러리 다운로드 라이트박스 모달 -->
+  <div id="photoLightboxModal" class="fixed inset-0 bg-black/90 z-60 flex flex-col justify-between p-4 hidden backdrop-blur-sm">
+    <div class="flex justify-between items-center text-white pt-1">
+      <span class="text-xs text-slate-300 font-semibold" id="lightboxTimeText">사진 상세 보기</span>
+      <button onclick="closePhotoLightbox()" class="text-white hover:text-slate-300 text-2xl p-2 font-bold leading-none">✕</button>
+    </div>
+    <div class="flex-1 flex items-center justify-center p-2">
+      <img id="lightboxImgTarget" src="" alt="확대 사진" class="max-h-[75vh] max-w-full object-contain rounded-2xl shadow-2xl" />
+    </div>
+    <div class="flex items-center justify-center gap-3 pb-3">
+      <button onclick="downloadCurrentLightboxPhoto()" class="bg-white text-slate-900 active:scale-95 font-black text-xs px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-1.5 transition">
+        <span>📥</span><span>내 폰 갤러리에 저장</span>
+      </button>
+      <button onclick="deleteCurrentLightboxPhoto()" class="bg-rose-600/90 hover:bg-rose-700 active:scale-95 text-white font-bold text-xs px-3.5 py-2.5 rounded-xl shadow flex items-center gap-1.5 transition">
+        <span>🗑️</span><span>삭제</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 커스텀 삭제 확인 모달 -->
+  <div id="confirmDeleteModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm transition-opacity duration-200">
+    <div class="bg-white rounded-3xl p-5 w-full max-w-sm space-y-4 shadow-2xl border border-slate-100 transform transition-transform duration-200 scale-100">
+      <div class="flex items-center gap-3">
+        <div id="confirmIconBox" class="w-11 h-11 rounded-2xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 font-bold text-xl shrink-0">
+          🗑️
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5 mb-0.5">
+            <span id="confirmTypeBadge" class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-rose-100 text-rose-700">삭제 확인</span>
+            <span id="confirmCategoryHint" class="text-[10px] text-slate-400"></span>
+          </div>
+          <h3 class="font-bold text-base text-slate-800 leading-tight">항목을 삭제하시겠습니까?</h3>
+        </div>
+      </div>
+
+      <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100">
+        <p id="confirmDeleteItemName" class="text-sm font-bold text-slate-800 break-words"></p>
+        <p id="confirmDeleteSub" class="text-xs text-slate-500 mt-0.5"></p>
+      </div>
+
+      <div class="flex items-center gap-2 pt-1">
+        <button onclick="closeConfirmModal()" class="flex-1 py-2.5 text-xs bg-slate-100 font-bold rounded-xl text-slate-600 hover:bg-slate-200 transition">
+          취소
+        </button>
+        <button id="confirmExecuteBtn" class="flex-1 py-2.5 text-xs bg-rose-600 font-bold rounded-xl text-white hover:bg-rose-700 shadow-md transition active:scale-95">
+          삭제하기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🚨 일본 현지 긴급전화 바로걸기 모달 -->
+  <div id="emergencyModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm transition-opacity duration-200">
+    <div class="bg-white rounded-3xl p-5 w-full max-w-sm space-y-4 shadow-2xl border border-rose-100">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <div class="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-lg font-bold">
+            🚨
+          </div>
+          <div>
+            <h3 class="font-bold text-base text-slate-800">일본 현지 긴급 연락망</h3>
+            <p class="text-[11px] text-slate-400">버튼 터치 시 휴대폰 통화 화면으로 바로 연결됩니다</p>
+          </div>
+        </div>
+        <button onclick="closeEmergencyModal()" class="text-slate-400 hover:text-slate-600 p-1 text-base font-bold">✕</button>
+      </div>
+
+      <div class="space-y-2.5 text-xs">
+        <a href="tel:110" class="flex items-center justify-between p-3 rounded-2xl bg-rose-50 hover:bg-rose-100/80 border border-rose-200/80 transition active:scale-98">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">👮‍♂️</span>
+            <div>
+              <div class="font-extrabold text-sm text-slate-900">경찰서 (범죄·교통사고·도난)</div>
+              <div class="text-[11px] text-slate-500">사건 사고 발생 즉시 신고</div>
+            </div>
+          </div>
+          <span class="bg-rose-600 text-white font-black text-sm px-3 py-1.5 rounded-xl shadow-sm flex items-center gap-1 shrink-0">
+            <span>📞</span> 110
+          </span>
+        </a>
+
+        <a href="tel:119" class="flex items-center justify-between p-3 rounded-2xl bg-amber-50 hover:bg-amber-100/80 border border-amber-200/80 transition active:scale-98">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🚑</span>
+            <div>
+              <div class="font-extrabold text-sm text-slate-900">구급차 · 화재 신고</div>
+              <div class="text-[11px] text-slate-500">급성 질환·부상 응급 이송</div>
+            </div>
+          </div>
+          <span class="bg-amber-500 text-slate-950 font-black text-sm px-3 py-1.5 rounded-xl shadow-sm flex items-center gap-1 shrink-0">
+            <span>📞</span> 119
+          </span>
+        </a>
+
+        <a href="tel:011-218-0288" class="flex items-center justify-between p-3 rounded-2xl bg-indigo-50 hover:bg-indigo-100/80 border border-indigo-200/80 transition active:scale-98">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🇰🇷</span>
+            <div>
+              <div class="font-extrabold text-sm text-slate-900">주삿포로 대한민국 총영사관</div>
+              <div class="text-[11px] text-slate-500">여권 분실 및 홋카이도 영사 조력</div>
+            </div>
+          </div>
+          <span class="bg-indigo-600 text-white font-bold text-xs px-2.5 py-1.5 rounded-xl shadow-sm flex items-center gap-1 shrink-0">
+            <span>📞</span> 통화
+          </span>
+        </a>
+
+        <a href="tel:+82-2-3210-0404" class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 transition active:scale-98">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🌐</span>
+            <div>
+              <div class="font-extrabold text-sm text-slate-900">24시간 외교부 영사콜센터</div>
+              <div class="text-[11px] text-slate-500">긴급 통역 지원 & 24시간 연중무휴</div>
+            </div>
+          </div>
+          <span class="bg-slate-800 text-white font-bold text-xs px-2.5 py-1.5 rounded-xl shadow-sm flex items-center gap-1 shrink-0">
+            <span>📞</span> +82 연결
+          </span>
+        </a>
+      </div>
+
+      <div class="pt-1">
+        <button onclick="closeEmergencyModal()" class="w-full py-2.5 text-xs bg-slate-100 font-bold rounded-xl text-slate-600 hover:bg-slate-200 transition">
+          닫기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 💡 스팟 & 맛집 상세 안내 팝업 모달 -->
+  <div id="spotDetailModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm transition-opacity duration-200">
+    <div class="bg-white rounded-3xl p-5 w-full max-w-sm space-y-4 shadow-2xl border border-slate-100 max-h-[85vh] flex flex-col">
+      <div class="flex items-start justify-between pb-3 border-b border-slate-100">
+        <div>
+          <span id="detailCategoryBadge" class="text-[10px] font-black px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700">식당 정보</span>
+          <h3 id="detailSpotName" class="font-extrabold text-base text-slate-800 mt-1 leading-snug">스팟 이름</h3>
+        </div>
+        <button onclick="closeSpotDetailModal()" class="text-slate-400 hover:text-slate-600 p-1 text-lg font-bold leading-none">✕</button>
+      </div>
+
+      <div id="detailContentBody" class="space-y-3 overflow-y-auto flex-1 pr-1 text-xs"></div>
+
+      <div class="pt-2 border-t border-slate-100 flex gap-2">
+        <a id="detailMapBtn" href="#" target="_blank" class="flex-1 py-2 text-center text-xs bg-indigo-50 text-indigo-700 font-bold rounded-xl border border-indigo-200 hover:bg-indigo-100 transition">
+          📍 구글 지도 열기
+        </a>
+        <button onclick="closeSpotDetailModal()" class="flex-1 py-2 text-xs bg-slate-800 font-bold rounded-xl text-white hover:bg-slate-900 transition">
+          확인
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 토스트 안내 메시지 -->
+  <div id="appToast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900/90 text-white text-xs font-bold px-4 py-2.5 rounded-full shadow-lg transition-all duration-300 opacity-0 pointer-events-none">
+    알림 메시지
+  </div>
+
+  <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;" onchange="handlePhotoUpload(event)" />
+  <input type="file" id="albumInput" accept="image/*" multiple style="display: none;" onchange="handlePhotoUpload(event)" />
+
+  <script>
+    /* 여권 및 면허증 사본 데이터 정의 */
+    const passportDocList = [
+      {
+        title: "여권 사본 - 김수아 (KIM SUA)",
+        sub: "여권번호: M748P8625 | 만료일: 2033년 3월 27일",
+        // 고해상도 SVG 포맷으로 실제 정보 및 시각 레이아웃 복원
+        svg: `<svg viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg" class="w-full h-full bg-[#fdfbf7]">
+          <rect x="0" y="0" width="600" height="420" fill="#fcf9f2"/>
+          <line x1="280" y1="10" x2="280" y2="410" stroke="#d5cebe" stroke-dasharray="4,4"/>
+          <!-- 왼쪽 면 (장관 서한 & 사진) -->
+          <text x="30" y="45" font-size="10" font-weight="bold" fill="#333">이 여권을 소지한 대한민국 국민이 아무 지장 없이...</text>
+          <text x="30" y="65" font-size="11" font-weight="bold" fill="#0f172a">대한민국 외교부장관</text>
+          <rect x="110" y="270" width="80" height="100" rx="4" fill="#cbd5e1" stroke="#94a3b8"/>
+          <text x="150" y="325" font-size="11" text-anchor="middle" fill="#475569">김수아 사진</text>
+          <text x="150" y="230" font-size="16" font-family="cursive" fill="#1e293b" text-anchor="middle">김수아</text>
+          <text x="150" y="250" font-size="9" fill="#64748b" text-anchor="middle">여권 소지인의 서명</text>
+          <!-- 오른쪽 면 (인적사항 면) -->
+          <rect x="295" y="15" width="290" height="390" fill="#ffffff" rx="8" stroke="#e2e8f0"/>
+          <text x="315" y="45" font-size="14" font-weight="900" fill="#0f172a">대한민국 REPUBLIC OF KOREA</text>
+          <rect x="525" y="32" width="24" height="15" rx="3" fill="#0284c7"/>
+          <circle cx="537" cy="39.5" r="4" fill="#fff"/>
+          <rect x="315" y="68" width="80" height="105" rx="6" fill="#e2e8f0" stroke="#94a3b8"/>
+          <text x="355" y="125" font-size="11" text-anchor="middle" fill="#475569">KIM SUA</text>
+          <text x="415" y="80" font-size="9" fill="#64748b">여권번호 / Passport No.</text>
+          <text x="415" y="98" font-size="15" font-weight="900" fill="#1e1b4b">M748P8625</text>
+          <text x="415" y="120" font-size="9" fill="#64748b">한글 성명 / Name</text>
+          <text x="415" y="138" font-size="14" font-weight="bold" fill="#0f172a">김수아 (KIM SUA)</text>
+          <text x="415" y="160" font-size="9" fill="#64748b">생년월일 / Date of birth</text>
+          <text x="415" y="176" font-size="12" font-weight="bold" fill="#0f172a">21 5월 / MAY 1984 (F)</text>
+          <text x="315" y="200" font-size="9" fill="#64748b">발급일 / Date of issue</text>
+          <text x="315" y="215" font-size="11" font-weight="bold" fill="#0f172a">27 3월 / MAR 2023</text>
+          <text x="435" y="200" font-size="9" fill="#64748b">기간만료일 / Expiry</text>
+          <text x="435" y="215" font-size="12" font-weight="bold" fill="#dc2626">27 3월 / MAR 2033</text>
+          <!-- 기계판독대(MRZ) -->
+          <rect x="305" y="245" width="270" height="45" fill="#f8fafc" rx="4"/>
+          <text x="315" y="263" font-family="monospace" font-size="9.5" font-weight="bold" fill="#334155">PMKORKIM&lt;&lt;SUA&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</text>
+          <text x="315" y="279" font-family="monospace" font-size="9.5" font-weight="bold" fill="#334155">M748P86251KOR8405210F33032743024303V</text>
+        </svg>`
+      },
+      {
+        title: "여권 사본 - 김유성 (KIM YOOSUNG)",
+        sub: "여권번호: M498P9048 | 만료일: 2028년 3월 27일",
+        svg: `<svg viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg" class="w-full h-full bg-[#fdfbf7]">
+          <rect x="0" y="0" width="600" height="420" fill="#fcf9f2"/>
+          <line x1="280" y1="10" x2="280" y2="410" stroke="#d5cebe" stroke-dasharray="4,4"/>
+          <text x="30" y="45" font-size="10" font-weight="bold" fill="#333">이 여권을 소지한 대한민국 국민이 아무 지장 없이...</text>
+          <text x="30" y="65" font-size="11" font-weight="bold" fill="#0f172a">대한민국 외교부장관</text>
+          <rect x="110" y="270" width="80" height="100" rx="4" fill="#cbd5e1" stroke="#94a3b8"/>
+          <text x="150" y="325" font-size="11" text-anchor="middle" fill="#475569">김유성 사진</text>
+          <text x="150" y="235" font-size="10" fill="#94a3b8" text-anchor="middle">(미성년자 서명생략)</text>
+          <rect x="295" y="15" width="290" height="390" fill="#ffffff" rx="8" stroke="#e2e8f0"/>
+          <text x="315" y="45" font-size="14" font-weight="900" fill="#0f172a">대한민국 REPUBLIC OF KOREA</text>
+          <rect x="525" y="32" width="24" height="15" rx="3" fill="#0284c7"/>
+          <circle cx="537" cy="39.5" r="4" fill="#fff"/>
+          <rect x="315" y="68" width="80" height="105" rx="6" fill="#e2e8f0" stroke="#94a3b8"/>
+          <text x="355" y="125" font-size="10" text-anchor="middle" fill="#475569">KIM YOOSUNG</text>
+          <text x="415" y="80" font-size="9" fill="#64748b">여권번호 / Passport No.</text>
+          <text x="415" y="98" font-size="15" font-weight="900" fill="#1e1b4b">M498P9048</text>
+          <text x="415" y="120" font-size="9" fill="#64748b">한글 성명 / Name</text>
+          <text x="415" y="138" font-size="14" font-weight="bold" fill="#0f172a">김유성 (KIM YOOSUNG)</text>
+          <text x="415" y="160" font-size="9" fill="#64748b">생년월일 / Date of birth</text>
+          <text x="415" y="176" font-size="12" font-weight="bold" fill="#0f172a">03 11월 / NOV 2014 (M)</text>
+          <text x="315" y="200" font-size="9" fill="#64748b">발급일 / Date of issue</text>
+          <text x="315" y="215" font-size="11" font-weight="bold" fill="#0f172a">27 3월 / MAR 2023</text>
+          <text x="435" y="200" font-size="9" fill="#64748b">기간만료일 / Expiry</text>
+          <text x="435" y="215" font-size="12" font-weight="bold" fill="#dc2626">27 3월 / MAR 2028</text>
+          <rect x="305" y="245" width="270" height="45" fill="#f8fafc" rx="4"/>
+          <text x="315" y="263" font-family="monospace" font-size="9.5" font-weight="bold" fill="#334155">PMKORKIM&lt;&lt;YOOSUNG&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</text>
+          <text x="315" y="279" font-family="monospace" font-size="9.5" font-weight="bold" fill="#334155">M498P90485KOR1411030M2803272745V293</text>
+        </svg>`
+      },
+      {
+        title: "여권 사본 - 김장식 (KIM JANGSIK)",
+        sub: "여권번호: M902J1290 | 만료일: 2033년 2월 16일",
+        svg: `<svg viewBox="0 0 600 420" xmlns="http://www.w3.org/2000/svg" class="w-full h-full bg-[#fdfbf7]">
+          <rect x="0" y="0" width="600" height="420" fill="#fcf9f2"/>
+          <line x1="280" y1="10" x2="280" y2="410" stroke="#d5cebe" stroke-dasharray="4,4"/>
+          <text x="30" y="45" font-size="10" font-weight="bold" fill="#333">이 여권을 소지한 대한민국 국민이 아무 지장 없이...</text>
+          <text x="30" y="65" font-size="11" font-weight="bold" fill="#0f172a">대한민국 외교부장관</text>
+          <rect x="110" y="270" width="80" height="100" rx="4" fill="#cbd5e1" stroke="#94a3b8"/>
+          <text x="150" y="325" font-size="11" text-anchor="middle" fill="#475569">김장식 사진</text>
+          <text x="150" y="230" font-size="16" font-family="cursive" fill="#1e293b" text-anchor="middle">김장식</text>
+          <text x="150" y="250" font-size="9" fill="#64748b" text-anchor="middle">여권 소지인의 서명</text>
+          <rect x="295" y="15" width="290" height="390" fill="#ffffff" rx="8" stroke="#e2e8f0"/>
+          <text x="315" y="45" font-size="14" font-weight="900" fill="#0f172a">대한민국 REPUBLIC OF KOREA</text>
+          <rect x="525" y="32" width="24" height="15" rx="3" fill="#0284c7"/>
+          <circle cx="537" cy="39.5" r="4" fill="#fff"/>
+          <rect x="315" y="68" width="80" height="105" rx="6" fill="#e2e8f0" stroke="#94a3b8"/>
+          <text x="355" y="125" font-size="10" text-anchor="middle" fill="#475569">KIM JANGSIK</text>
+          <text x="415" y="80" font-size="9" fill="#64748b">여권번호 / Passport No.</text>
+          <text x="415" y="98" font-size="15" font-weight="900" fill="#1e1b4b">M902J1290</text>
+          <text x="415" y="120" font-size="9" fill="#64748b">한글 성명 / Name</text>
+          <text x="415" y="138" font-size="14" font-weight="bold" fill="#0f172a">김장식 (KIM JANGSIK)</text>
+          <text x="415" y="160" font-size="9" fill="#64748b">생년월일 / Date of birth</text>
+          <text x="415" y="176" font-size="12" font-weight="bold" fill="#0f172a">16 4월 / APR 1983 (M)</text>
+          <text x="315" y="200" font-size="9" fill="#64748b">발급일 / Date of issue</text>
+          <text x="315" y="215" font-size="11" font-weight="bold" fill="#0f172a">16 2월 / FEB 2023</text>
+          <text x="435" y="200" font-size="9" fill="#64748b">기간만료일 / Expiry</text>
+          <text x="435" y="215" font-size="12" font-weight="bold" fill="#dc2626">16 2월 / FEB 2033</text>
+          <rect x="305" y="245" width="270" height="45" fill="#f8fafc" rx="4"/>
+          <text x="315" y="263" font-family="monospace" font-size="9.5" font-weight="bold" fill="#334155">PMKORKIM&lt;&lt;JANGSIK&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</text>
+          <text x="315" y="279" font-family="monospace" font-size="9.5" font-weight="bold" fill="#334155">M902J12904KOR8304162M33021630410946V</text>
+        </svg>`
+      },
+      {
+        title: "국제운전면허증 표지 - 김장식",
+        sub: "발급일: 2026.10.07 | 발급처: 부산경찰청",
+        svg: `<svg viewBox="0 0 500 380" xmlns="http://www.w3.org/2000/svg" class="w-full h-full bg-[#f1efe9]">
+          <rect x="0" y="0" width="500" height="380" fill="#f4f1eb" stroke="#d5cebe" stroke-width="2"/>
+          <text x="250" y="55" font-size="16" font-weight="bold" fill="#1e293b" text-anchor="middle">대 한 민 국</text>
+          <text x="250" y="75" font-size="12" fill="#475569" text-anchor="middle">REPUBLIC OF KOREA</text>
+          <text x="250" y="115" font-size="20" font-weight="900" fill="#0f172a" text-anchor="middle" letter-spacing="2">국제운전면허증</text>
+          <text x="250" y="140" font-size="11" font-weight="bold" fill="#334155" text-anchor="middle">INTERNATIONAL DRIVING PERMIT</text>
+          <text x="250" y="158" font-size="9.5" fill="#64748b" text-anchor="middle">1949. 9. 19 도로교통에 관한 협약</text>
+          <!-- 면허 번호 & 발급지 -->
+          <rect x="70" y="185" width="360" height="95" fill="#ffffff" rx="8" stroke="#cbd5e1"/>
+          <text x="90" y="215" font-size="11" fill="#64748b">발급지 / ISSUED AT :</text>
+          <text x="220" y="215" font-size="13" font-weight="bold" fill="#0f172a">BUSAN, KOREA</text>
+          <text x="90" y="240" font-size="11" fill="#64748b">발급년월일 / DATE OF ISSUE :</text>
+          <text x="250" y="240" font-size="13" font-weight="bold" fill="#0f172a">07. Oct. 2026</text>
+          <text x="90" y="265" font-size="11" fill="#64748b">면허번호 / PERMIT NO :</text>
+          <text x="220" y="265" font-size="13" font-weight="bold" fill="#1e40af">1207-26-122478</text>
+          <text x="250" y="325" font-size="14" font-weight="bold" fill="#1e293b" text-anchor="middle">부 산 경 찰 청</text>
+          <circle cx="360" cy="320" r="16" fill="none" stroke="#dc2626" stroke-width="2"/>
+          <text x="360" y="324" font-size="9" fill="#dc2626" font-weight="bold" text-anchor="middle">인</text>
+        </svg>`
+      },
+      {
+        title: "국제운전면허증 유효기간 및 구분표",
+        sub: "유효기간: ~2027.10.07 | 승용차량(B) 운전 가능",
+        svg: `<svg viewBox="0 0 500 380" xmlns="http://www.w3.org/2000/svg" class="w-full h-full bg-[#fdfbf7]">
+          <rect x="0" y="0" width="500" height="380" fill="#fcfaf2" stroke="#e2e8f0"/>
+          <rect x="20" y="20" width="460" height="110" fill="#ffffff" rx="8" stroke="#cbd5e1"/>
+          <text x="40" y="48" font-size="11" font-weight="bold" fill="#64748b">유효기간 EXPIRES ON :</text>
+          <text x="180" y="50" font-size="16" font-weight="900" fill="#dc2626">07. Oct. 2027</text>
+          <text x="40" y="78" font-size="10" fill="#334155">• 국제운전면허증으로 운전 시 한국 면허증과 여권을 함께 소지하십시오.</text>
+          <text x="40" y="98" font-size="10" fill="#334155">• 협약 가입국 입국 후 1년간 유효하며 단기 관광객에 적용됩니다.</text>
+          <!-- 허가 차종 B 스탬프 -->
+          <rect x="20" y="145" width="460" height="205" fill="#ffffff" rx="8" stroke="#cbd5e1"/>
+          <text x="40" y="172" font-size="12" font-weight="bold" fill="#0f172a">본 운전면허증이 유효한 차량 등급</text>
+          <line x1="20" y1="185" x2="480" y2="185" stroke="#cbd5e1"/>
+          <rect x="35" y="200" width="430" height="60" fill="#eff6ff" rx="6" stroke="#93c5fd"/>
+          <text x="50" y="222" font-size="13" font-weight="bold" fill="#1e40af">B 등급 : 승용차량 (운전자 외 최대 8인 좌석)</text>
+          <text x="50" y="242" font-size="10.5" fill="#1e3a8a">허용최대중량 3,500kg 이하의 승용자동차 및 화물자동차</text>
+          <circle cx="430" cy="230" r="18" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+          <text x="430" y="235" font-size="12" font-weight="900" fill="#2563eb" text-anchor="middle">부산청</text>
+          <text x="40" y="295" font-size="10" fill="#64748b">※ 렌터카 인수 시 국제면허증 + 한국 면허증 원본 동시 제시 필수</text>
+        </svg>`
+      },
+      {
+        title: "국제운전면허증 사진 및 인가면",
+        sub: "성명: KIM JANGSIK | B종 승용차 날인 완료",
+        svg: `<svg viewBox="0 0 500 380" xmlns="http://www.w3.org/2000/svg" class="w-full h-full bg-[#fdfbf7]">
+          <rect x="0" y="0" width="500" height="380" fill="#fcfaf2" stroke="#e2e8f0"/>
+          <rect x="30" y="30" width="110" height="140" rx="6" fill="#e2e8f0" stroke="#94a3b8"/>
+          <text x="85" y="105" font-size="12" text-anchor="middle" fill="#475569">김장식 사진</text>
+          <circle cx="120" cy="145" r="18" fill="none" stroke="#4338ca" stroke-width="2"/>
+          <text x="120" y="149" font-size="8.5" font-weight="bold" fill="#4338ca" text-anchor="middle">부산청장</text>
+          <!-- 인적 정보 -->
+          <text x="165" y="55" font-size="10" fill="#64748b">1. 성 / Nom :</text>
+          <text x="240" y="55" font-size="13" font-weight="bold" fill="#0f172a">KIM</text>
+          <text x="165" y="80" font-size="10" fill="#64748b">2. 이름 / Prenoms :</text>
+          <text x="270" y="80" font-size="13" font-weight="bold" fill="#0f172a">JANGSIK</text>
+          <text x="165" y="105" font-size="10" fill="#64748b">3. 출생국 :</text>
+          <text x="240" y="105" font-size="12" font-weight="bold" fill="#0f172a">REPUBLIC OF KOREA</text>
+          <text x="165" y="130" font-size="10" fill="#64748b">4. 생년월일 :</text>
+          <text x="240" y="130" font-size="12" font-weight="bold" fill="#0f172a">16. Apr. 1983</text>
+          <text x="165" y="155" font-size="10" fill="#64748b">5. 거주지 :</text>
+          <text x="240" y="155" font-size="12" font-weight="bold" fill="#0f172a">Busan</text>
+          <!-- B종 인증 스탬프 박스 -->
+          <rect x="30" y="195" width="440" height="150" fill="#ffffff" rx="8" stroke="#cbd5e1"/>
+          <text x="45" y="225" font-size="11" font-weight="bold" fill="#1e293b">인가된 차량 등급 (Sceau de l'Autorite)</text>
+          <rect x="45" y="240" width="80" height="85" fill="#f8fafc" stroke="#94a3b8" rx="4"/>
+          <text x="85" y="260" font-size="11" font-weight="bold" fill="#64748b" text-anchor="middle">A (이륜)</text>
+          <rect x="135" y="240" width="80" height="85" fill="#eff6ff" stroke="#2563eb" stroke-width="2" rx="4"/>
+          <text x="175" y="260" font-size="12" font-weight="black" fill="#1e40af" text-anchor="middle">B (승용)</text>
+          <circle cx="175" cy="290" r="16" fill="none" stroke="#2563eb" stroke-width="2"/>
+          <text x="175" y="294" font-size="8.5" font-weight="black" fill="#2563eb" text-anchor="middle">부산청</text>
+          <rect x="225" y="240" width="75" height="85" fill="#f8fafc" stroke="#94a3b8" rx="4"/>
+          <text x="262" y="260" font-size="11" fill="#64748b" text-anchor="middle">C (화물)</text>
+          <rect x="310" y="240" width="75" height="85" fill="#f8fafc" stroke="#94a3b8" rx="4"/>
+          <text x="347" y="260" font-size="11" fill="#64748b" text-anchor="middle">D (대형)</text>
+          <rect x="395" y="240" width="65" height="85" fill="#f8fafc" stroke="#94a3b8" rx="4"/>
+          <text x="427" y="260" font-size="11" fill="#64748b" text-anchor="middle">E (견인)</text>
+        </svg>`
+      }
+    ];
+
+    function initPassportThumbnails() {
+      passportDocList.forEach((doc, idx) => {
+        const imgEl = document.getElementById(`passImg-${idx}`);
+        if (imgEl) {
+          const svgDataUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(doc.svg);
+          imgEl.src = svgDataUrl;
+        }
+      });
+    }
+
+    function openPassportModal() {
+      initPassportThumbnails();
+      const modal = document.getElementById('passportModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closePassportModal() {
+      const modal = document.getElementById('passportModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function viewPassportDoc(idx) {
+      const doc = passportDocList[idx];
+      if (!doc) return;
+      const dataUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(doc.svg);
+      openPhotoLightbox({
+        id: 'doc_' + idx,
+        dataUrl: dataUrl,
+        time: Date.now()
+      });
+      const timeText = document.getElementById('lightboxTimeText');
+      if (timeText) timeText.innerText = `${doc.title} (${doc.sub})`;
+    }
+
+    function openEmergencyModal() {
+      const modal = document.getElementById('emergencyModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+    function closeEmergencyModal() {
+      const modal = document.getElementById('emergencyModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function openPorocleRouteModal() {
+      const modal = document.getElementById('porocleRouteModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+    function closePorocleRouteModal() {
+      const modal = document.getElementById('porocleRouteModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    /* 포로클 이용 주의사항 모달 열기 / 닫기 */
+    function openPorocleNoticeModal() {
+      const modal = document.getElementById('porocleNoticeModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+    function closePorocleNoticeModal() {
+      const modal = document.getElementById('porocleNoticeModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('appToast');
+      if (!toast) return;
+      toast.innerText = msg;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      toast.classList.add('opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100');
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 2000);
+    }
+
+    let pendingDeleteCallback = null;
+
+    function openConfirmModal(titleText, subText, onConfirm, options = {}) {
+      const type = options.type || 'spot';
+      const iconBox = document.getElementById('confirmIconBox');
+      const typeBadge = document.getElementById('confirmTypeBadge');
+      const catHint = document.getElementById('confirmCategoryHint');
+
+      if (type === 'check') {
+        iconBox.innerHTML = '📋';
+        typeBadge.innerText = '준비물 삭제';
+        typeBadge.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800';
+        catHint.innerText = '체크리스트 준비물';
+      } else if (type === 'expense') {
+        iconBox.innerHTML = '💰';
+        typeBadge.innerText = '지출 내역 삭제';
+        typeBadge.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
+        catHint.innerText = '가계부 등록 지출';
+      } else if (type === 'photo') {
+        iconBox.innerHTML = '📸';
+        typeBadge.innerText = '사진 삭제';
+        typeBadge.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800';
+        catHint.innerText = '앨범 보관 사진';
+      } else {
+        iconBox.innerHTML = '📍';
+        typeBadge.innerText = '스팟 후보 삭제';
+        typeBadge.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-rose-100 text-rose-700';
+        catHint.innerText = '일정 스팟 / 맛집';
+      }
+
+      document.getElementById('confirmDeleteItemName').innerText = titleText;
+      document.getElementById('confirmDeleteSub').innerText = subText || "삭제 후에는 목록에서 제거됩니다.";
+      pendingDeleteCallback = onConfirm;
+      document.getElementById('confirmDeleteModal').classList.remove('hidden');
+    }
+
+    function closeConfirmModal() {
+      const modal = document.getElementById('confirmDeleteModal');
+      if (modal) modal.classList.add('hidden');
+      pendingDeleteCallback = null;
+    }
+
+    const confirmExecBtn = document.getElementById('confirmExecuteBtn');
+    if (confirmExecBtn) {
+      confirmExecBtn.onclick = () => {
+        if (pendingDeleteCallback) {
+          pendingDeleteCallback();
+        }
+        closeConfirmModal();
+      };
+    }
+
+    // 1. 체크리스트
+    const defaultChecklistData = {
+      docs: [
+        "여권 (유효기간 6개월 이상 확인)",
+        "국제운전면허증 + 한국 면허증 원본 동시 지참 (렌터카 필수)",
+        "비짓재팬웹(VJW) 입국/세관 QR 사전 등록",
+        "해외결제 카드 (트래블로그/트래블월렛) & 비상 엔화 현금"
+      ],
+      clothes: [
+        "경량 패딩 또는 도톰한 가을 코트 (후라노/비에이 체감온도 5~12도)",
+        "탈착식 가디건 & 기모 후드 (실내외 큰 일교차 대비)",
+        "머플러 / 넥워머 및 가벼운 방한 장갑",
+        "청의 호수/비에이 산책용 편안한 방수 운동화"
+      ],
+      etc: [
+        "110V 일본용 돼지코 플러그 3~4개",
+        "차량용 스마트폰 송풍구 거치대 (렌터카 구글맵용)",
+        "차량용 C타입 / 아이폰 고속 충전 케이블",
+        "가족 비상약 (소화제, 두통약, 멀미약, 종합감기약)",
+        "고용량 보조배터리 (사진 촬영 및 운전 내비 대비)"
+      ],
+      custom: []
+    };
+
+    let userChecklist = JSON.parse(localStorage.getItem('sapporo_user_checklist')) || defaultChecklistData;
+
+    function renderChecklist() {
+      const savedChecked = JSON.parse(localStorage.getItem('sapporo_checked_items')) || {};
+      ['docs', 'clothes', 'etc', 'custom'].forEach(group => {
+        const items = userChecklist[group] || [];
+        const container = document.getElementById(`checkgroup-${group}`);
+        const countBadge = document.getElementById(`count-${group}`);
+
+        if (countBadge) {
+          const checkedCount = items.filter((_, idx) => !!savedChecked[`${group}_${idx}`]).length;
+          countBadge.innerText = `${checkedCount}/${items.length}`;
+        }
+
+        if (!container) return;
+
+        if (items.length === 0 && group === 'custom') {
+          container.innerHTML = `<div class="p-3 text-center text-xs text-slate-400 bg-slate-50/50 rounded-xl border border-dashed">추가된 준비물이 없습니다. 상단의 '+ 준비물'을 눌러보세요!</div>`;
+          return;
+        }
+
+        container.innerHTML = items.map((item, idx) => {
+          const itemKey = `${group}_${idx}`;
+          const isChecked = !!savedChecked[itemKey];
+          return `
+            <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+              <label class="flex items-center space-x-2.5 cursor-pointer flex-1 mr-2">
+                <input type="checkbox" onchange="toggleCheck('${itemKey}', this.checked)" ${isChecked ? 'checked' : ''} class="w-4 h-4 rounded text-indigo-600 accent-indigo-600" />
+                <span class="text-slate-700 font-medium ${isChecked ? 'line-through text-slate-400' : ''}">${item}</span>
+              </label>
+              <button onclick="promptDeleteCheckItem('${group}', ${idx}, '${item.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-rose-600 hover:bg-rose-50 px-2 py-1 rounded-lg text-xs font-bold transition flex items-center gap-0.5" title="삭제">
+                <span>✕</span>
+              </button>
+            </div>
+          `;
+        }).join('');
+      });
+    }
+
+    function toggleCheck(key, isChecked) {
+      const savedChecked = JSON.parse(localStorage.getItem('sapporo_checked_items')) || {};
+      savedChecked[key] = isChecked;
+      localStorage.setItem('sapporo_checked_items', JSON.stringify(savedChecked));
+      renderChecklist();
+    }
+
+    function openAddCheckModal() { document.getElementById('addCheckModal').classList.remove('hidden'); }
+    function closeAddCheckModal() { 
+      document.getElementById('addCheckModal').classList.add('hidden');
+      document.getElementById('checkItemText').value = '';
+    }
+    function saveNewCheckItem() {
+      const category = document.getElementById('checkCategory').value;
+      const text = document.getElementById('checkItemText').value.trim();
+      if (!text) {
+        showToast('준비물 이름을 입력해주세요.');
+        return;
+      }
+
+      if (!userChecklist[category]) userChecklist[category] = [];
+      userChecklist[category].push(text);
+      localStorage.setItem('sapporo_user_checklist', JSON.stringify(userChecklist));
+      renderChecklist();
+      closeAddCheckModal();
+      showToast('준비물이 추가되었습니다.');
+    }
+
+    function promptDeleteCheckItem(group, index, name) {
+      openConfirmModal(name, "이 준비물을 체크리스트에서 삭제하시겠습니까?", () => {
+        userChecklist[group].splice(index, 1);
+        localStorage.setItem('sapporo_user_checklist', JSON.stringify(userChecklist));
+        renderChecklist();
+        showToast('준비물이 삭제되었습니다.');
+      }, { type: 'check' });
+    }
+
+    // 2. Budget 관리
+    const initialBudget = [
+      { id: "b1", date: "사전 결제", category: "항공/보험", title: "이스타항공 왕복 (3인) + 여행자보험", amountKRW: 1070420, amountJPY: 0, isFixed: true },
+      { id: "b2", date: "사전 결제", category: "숙소", title: "홀리데이 인 삿포로 (10/15~17, 2박)", amountKRW: 430834, amountJPY: 0, isFixed: true },
+      { id: "b3", date: "사전 결제", category: "렌터카", title: "니폰렌트카 스스키노 (트립닷컴 종합보험 포함)", amountKRW: 219667, amountJPY: 0, isFixed: true },
+      { id: "b4", date: "사전 결제", category: "숙소", title: "라비스타 후라노 힐즈 온센 (10/17~19, 2박)", amountKRW: 0, amountJPY: 51834, isFixed: true },
+      { id: "b5", date: "10/17(토)", category: "렌터카", title: "신치토세 공항 편도 반납 수수료", amountKRW: 0, amountJPY: 5500, isFixed: false }
+    ];
+
+    let budgetList = JSON.parse(localStorage.getItem('sapporo_budget_items')) || initialBudget;
+
+    function loadBalances() {
+      const saved = JSON.parse(localStorage.getItem('sapporo_manual_balances')) || { eric: '', sua: '', cash: '' };
+      const elEric = document.getElementById('balanceEric');
+      const elSua = document.getElementById('balanceSua');
+      const elCash = document.getElementById('balanceCash');
+
+      if (elEric) elEric.value = saved.eric !== undefined ? saved.eric : '';
+      if (elSua) elSua.value = saved.sua !== undefined ? saved.sua : '';
+      if (elCash) elCash.value = saved.cash !== undefined ? saved.cash : '';
+
+      calculateTotalRemaining();
+    }
+
+    function saveAndRenderBalances() {
+      const ericVal = document.getElementById('balanceEric')?.value || '';
+      const suaVal = document.getElementById('balanceSua')?.value || '';
+      const cashVal = document.getElementById('balanceCash')?.value || '';
+
+      const balanceData = { eric: ericVal, sua: suaVal, cash: cashVal };
+      localStorage.setItem('sapporo_manual_balances', JSON.stringify(balanceData));
+      calculateTotalRemaining();
+    }
+
+    function calculateTotalRemaining() {
+      const eric = Number(document.getElementById('balanceEric')?.value || 0);
+      const sua = Number(document.getElementById('balanceSua')?.value || 0);
+      const cash = Number(document.getElementById('balanceCash')?.value || 0);
+
+      const totalJPY = eric + sua + cash;
+      const totalKRW = Math.round(totalJPY * 8.5);
+
+      const elJPY = document.getElementById('totalRemainingJPY');
+      const elKRW = document.getElementById('totalRemainingKRW');
+
+      if (elJPY) elJPY.innerText = `¥${totalJPY.toLocaleString()}`;
+      if (elKRW) elKRW.innerText = `약 ${totalKRW.toLocaleString()}원`;
+    }
+
+    function renderBudget() {
+      const container = document.getElementById('expenseListContainer');
+      if (!container) return;
+      container.innerHTML = "";
+
+      let totalKRW = 0;
+      let totalJPY = 0;
+
+      budgetList.forEach((item, idx) => {
+        totalKRW += Number(item.amountKRW || 0);
+        totalJPY += Number(item.amountJPY || 0);
+
+        const row = document.createElement('div');
+        row.className = "bg-white p-3.5 rounded-xl border border-slate-200 flex justify-between items-center";
+        const priceText = item.amountKRW > 0 
+          ? `<span class="text-sm font-black text-slate-900">₩${Number(item.amountKRW).toLocaleString()}</span>`
+          : `<span class="text-sm font-black text-amber-600">¥${Number(item.amountJPY).toLocaleString()}</span>`;
+
+        row.innerHTML = `
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 font-bold text-slate-700">${item.category}</span>
+              <span class="text-xs text-slate-400 font-medium">${item.date}</span>
+            </div>
+            <div class="text-sm font-bold text-slate-800 mt-1">${item.title}</div>
+          </div>
+          <div class="flex items-center gap-2">
+            ${priceText}
+            ${!item.isFixed ? `<button onclick="promptDeleteExpense(${idx}, '${item.title.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-rose-600 hover:bg-rose-50 px-2 py-1 rounded-lg text-xs font-bold transition flex items-center gap-0.5" title="삭제"><span>✕</span></button>` : ''}
+          </div>
+        `;
+        container.appendChild(row);
+      });
+
+      const convertedTotal = totalKRW + Math.round(totalJPY * 8.5);
+      const elTotal = document.getElementById('totalExpenseCalculated');
+      const elKRW = document.getElementById('totalKRWText');
+      const elJPY = document.getElementById('totalJPYText');
+
+      if (elTotal) elTotal.innerText = `₩${convertedTotal.toLocaleString()}`;
+      if (elKRW) elKRW.innerText = `₩${totalKRW.toLocaleString()}`;
+      if (elJPY) elJPY.innerText = `¥${totalJPY.toLocaleString()}`;
+    }
+
+    function openAddExpenseModal() { document.getElementById('addExpenseModal').classList.remove('hidden'); }
+    function closeAddExpenseModal() {
+      document.getElementById('addExpenseModal').classList.add('hidden');
+      document.getElementById('expTitle').value = '';
+      document.getElementById('expAmountJPY').value = '';
+    }
+    function saveNewExpense() {
+      const date = document.getElementById('expDate').value;
+      const category = document.getElementById('expCategory').value;
+      const title = document.getElementById('expTitle').value.trim();
+      const amountJPY = Number(document.getElementById('expAmountJPY').value);
+
+      if (!title || !amountJPY) {
+        showToast('내용과 엔화 금액을 입력해주세요.');
+        return;
+      }
+
+      budgetList.push({
+        id: 'b_' + Date.now(),
+        date, category, title,
+        amountKRW: 0,
+        amountJPY,
+        isFixed: false
+      });
+
+      localStorage.setItem('sapporo_budget_items', JSON.stringify(budgetList));
+      renderBudget();
+      closeAddExpenseModal();
+      showToast('지출 내역이 추가되었습니다.');
+    }
+
+    function promptDeleteExpense(idx, title) {
+      openConfirmModal(title, "이 지출 내역을 가계부에서 삭제하시겠습니까?", () => {
+        budgetList.splice(idx, 1);
+        localStorage.setItem('sapporo_budget_items', JSON.stringify(budgetList));
+        renderBudget();
+        showToast('지출 내역이 삭제되었습니다.');
+      }, { type: 'expense' });
+    }
+
+    // 3. 스팟 관리 (기본 후보군 + 자유 추가 스팟 통합)
+    const initialDefaultSpots = {
+      'day-1': [
+        { 
+          id: 'spot_d1_matsuo', 
+          category: 'dinner', 
+          name: '마츠오 징기스칸 삿포로역 앞점 (예약가능)', 
+          reason: '사과와 양파 등을 넣은 특제 간장 소스에 미리 재운 양고기(사키즈케)를 제공합니다. 잡내가 없고 달콤짭조름하여 초등학교 6학년 아이도 거부감 없이 맛있게 먹을 수 있습니다.',
+          family: '넓고 세련된 테이블석 중심이며, 삿포로역 지하도로 바로 연결되어 접근성이 뛰어납니다. 사전 웹 예약을 활용하면 대기 없이 이용할 수 있습니다.',
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Matsuo+Jingisukan+Sapporo+Ekimae' 
+        },
+        { 
+          id: 'spot_d1_suage', 
+          category: 'dinner', 
+          name: '수프카레 스아게 플러스 (Suage+) 본점', 
+          reason: '꼬치에 꿰어 바삭하게 튀겨낸 채소와 고기, 깔끔하고 칼칼한 국물이 일품인 삿포로 대표 수프카레 명점입니다.',
+          family: '맵기 단계를 1단계부터 자유롭게 선택할 수 있어 매운 음식을 잘 못 먹는 아이도 맛있게 즐길 수 있습니다.',
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Soup+Curry+Suage%2B+Sapporo' 
+        },
+        { 
+          id: 'spot_d1_daruma', 
+          category: 'dinner', 
+          name: '징기스칸 다루마 스스키노 본점', 
+          reason: '1954년 창업한 노포로, 비장탄 숯불 직화 철판에 신선한 양고기와 채소를 구워 특제 소스에 찍어 먹습니다.',
+          family: '스스키노의 생생한 먹거리 분위기를 경험할 수 있으나, 카운터석 위주라 이른 저녁 시간에 방문하는 것을 추천합니다.',
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Daruma+Main+Shop+Susukino+Sapporo' 
+        }
+      ],
+      'day-2': [
+        { 
+          id: 'spot_d2_tvtower', 
+          category: 'spot', 
+          name: '삿포로 TV타워 (Sapporo TV Tower)', 
+          reason: '오도리 공원 동쪽 끝(주오구 오도리니시 1초메)에 자리 잡고 있으며, 높이 약 147m에 달하는 삿포로의 대표적인 상징 랜드마크입니다. 가을 화단과 분수대, 전망대에서 시내 전경을 한눈에 내려다볼 수 있습니다.',
+          family: '건물 1층 뒤편에 삿포로관광안내소가 위치해 있어, 포로클(Porocle) 12시간 패스 실물 IC 카드를 교환하거나 현장 구매하는 핵심 출발점 역할을 합니다.',
+          mapUrl: 'https://maps.google.com/?cid=16286171258450747441' 
+        },
+        { 
+          id: 'spot_d2_clocktower', 
+          category: 'spot', 
+          name: '삿포로 시계탑 (Sapporo Clock Tower)', 
+          reason: '오도리 공원 및 삿포로 TV 타워와 가까운 도심 중심부에 위치해 있어, 포로클 전동자전거를 타고 쉽게 방문할 수 있는 라이딩 코스의 핵심 경유지입니다.',
+          family: '1878년에 지어진 일본에서 가장 오래된 목조 시계탑으로, 길 건너편 MN 빌딩 2층 테라스에서 시계탑을 배경으로 가족 기념사진을 남기기 좋습니다.',
+          mapUrl: 'https://maps.google.com/?cid=1989368697453858283' 
+        },
+        { 
+          id: 'spot_d2_akarenga', 
+          category: 'spot', 
+          name: '홋카이도청 구 본청사 (아카렌가)', 
+          reason: '아카렌가(赤れんが)라는 애칭으로 유명한 고풍스러운 붉은 벽돌 외관과 미국풍 네오바로크 양식의 역사적 국가 중요문화재로, 삿포로를 대표하는 최고의 상징적 포토 스팟입니다.',
+          family: '도심 문화 라이딩 동선 중심에 위치해 있어 자전거로 들르기 매우 편리합니다. 건물 앞 연못과 단풍 수목이 어우러진 정원이 조성되어 있어 산책하며 사진 남기기 좋습니다.',
+          mapUrl: 'https://maps.google.com/?cid=14909747322622763685' 
+        },
+        { 
+          id: 'spot_d2_rokkatei', 
+          category: 'spot', 
+          name: '롯카테이 삿포로 본점', 
+          reason: '홋카이도 대표 과자인 마루세이 버터샌드와 신선한 샌드 디저트를 고급스러운 본점 살롱에서 즐길 수 있습니다.',
+          family: '1층은 선물용 제과 쇼핑, 2층은 카페 공간으로 구성되어 있어 쇼핑과 휴식을 동시에 해결할 수 있습니다.',
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Rokkatei+Sapporo+Main+Branch' 
+        },
+        { 
+          id: 'spot_d2_hokudai', 
+          category: 'spot', 
+          name: '홋카이도 대학', 
+          reason: '은행나무길 등 울창한 가로수와 역사적인 건축물이 어우러져 있어 도심 속에서 자연을 즐기며 라이딩하기에 좋습니다.',
+          family: '전체적으로 경사가 없는 완만한 평지로 도로가 잘 정비되어 있어 가족 라이딩 코스로 이상적입니다. 캠퍼스 종합박물관 무료 입장 가능.',
+          mapUrl: 'https://maps.google.com/?cid=4782708464689055445' 
+        },
+        { 
+          id: 'spot_d2_ippin', 
+          category: 'lunch', 
+          name: '도카치 부타돈 잇핀 스텔라플레이스 6층점', 
+          reason: '숯불 향이 진하게 배어있는 도카치 정통 돼지고기 덮밥 전문점입니다.',
+          family: '고기 커팅 크기, 소스 양, 밥 양을 선택할 수 있어 초등학생 아들 한 끼 식사로 실패 없는 선택입니다.',
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Tokachi+Butadon+Ippin+Stellar+Place' 
+        },
+        { 
+          id: 'spot_d2_beermuseum', 
+          category: 'spot', 
+          name: '삿포로 맥주 박물관 (Sapporo Beer Museum)', 
+          reason: '1876년 탄생한 삿포로 맥주의 역사와 제조 과정을 다채로운 전시로 둘러볼 수 있는 시내 주요 명소입니다.',
+          family: '인근 포트에 자전거를 편리하게 반납하고 둘러볼 수 있습니다. 맥주 및 음료 시음 가능.',
+          mapUrl: 'https://maps.google.com/?cid=1396334665551701963' 
+        },
+        { 
+          id: 'spot_d2_observatory', 
+          category: 'spot', 
+          name: '삿포로시 천문대 (나카지마 공원)', 
+          reason: '나카지마 공원 안에 위치한 유서 깊은 천문대입니다. 공원 내 아름다운 쇼부 연못과 울창한 단풍 산책로를 감상할 수 있습니다.',
+          family: '도요히라강 수변 자전거 도로와 연계해 들르기 쾌적합니다. 1958년 개관한 천문대의 20cm 굴절 망원경 관람 가능.',
+          mapUrl: 'https://maps.google.com/?cid=10597375092385149593' 
+        },
+        { 
+          id: 'spot_d2_nigirimeshi', 
+          category: 'lunch', 
+          name: '니기리메시 (にぎりめし)', 
+          reason: '스스키노에 위치한 24시간 연중무휴 수제 주먹밥 전문점입니다. 주문 즉시 따뜻하게 쥐어내는 일본 정통 주먹밥으로, 크림치즈 명란이 시그니처입니다.',
+          family: '자전거 투어 전 아침 식사나 나들이용 간식 테이크아웃으로 아이와 함께 간편하고 든든하게 즐기기 최적입니다.',
+          mapUrl: 'https://maps.google.com/?cid=3826489377369688834' 
+        },
+        { 
+          id: 'spot_d2_hanamaru', 
+          category: 'lunch', 
+          name: '네무로 하나마루 JR타워 스텔라플레이스점', 
+          reason: '홋카이도 근해의 신선한 수산물을 사용하는 인기 회전초밥집으로, 2층 가리비와 연어알 간장절임 등이 대표적입니다.',
+          family: '키오스크 대기표 발행 후 QR코드로 실시간 대기 순서를 확인하며 쇼핑몰을 구경할 수 있습니다.',
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Nemuro+Hanamaru+JR+Tower+Stellar+Place' 
+        },
+        { 
+          id: 'spot_d2_shingen', 
+          category: 'lunch', 
+          name: '라멘 신겐 미나미 6조점', 
+          reason: '대표 메뉴인 신슈(진한 미소)는 자극적이지 않고 부드러우며 깊은 미소 풍미를 자랑합니다.',
+          family: '미소 라멘과 함께 불맛 나는 고소한 차항(볶음밥)을 함께 주문해 푸짐하게 나눠 먹기 좋습니다.',
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Ramen+Shingen+Minami+6-jo+Sapporo' 
+        },
+        { 
+          id: 'spot_d2_kinotoya', 
+          category: 'spot', 
+          name: '키노토야 베이크 지하상가 폴타운점', 
+          reason: '홋카이도산 마스카포네를 넣어 진하고 꾸덕한 극상 밀크 소프트아이스크림과 갓 구운 치즈 타르트 전문점입니다.',
+          family: '지하상가 통로에 위치해 이동 중 테이크아웃 간식 타임으로 최적입니다.',
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Kinotoya+Bake+Pole+Town+Sapporo' 
+        },
+        { 
+          id: 'spot_d2_yukijirushi', 
+          category: 'spot', 
+          name: '유키지루시 파라 삿포로 본점', 
+          reason: '50년 이상의 역사를 지닌 디저트 노포로, 쇼와 천황을 위해 개발된 아이스크림과 30여 가지의 화려한 파르페를 맛볼 수 있습니다.',
+          family: '매장이 넓고 테이블 간격이 쾌적하여 3인 가족이 편안하게 앉아 휴식을 취하기 좋습니다.',
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Yukijirushi+Parlor+Sapporo+Main+Branch' 
+        },
+        { 
+          id: 'spot_d2_pal', 
+          category: 'spot', 
+          name: '파르페테리아 팔 (Parfaiteria Pal)', 
+          reason: '삿포로의 독특한 밤 문화인 시메파르페를 창시한 전문점으로, 예술작품 같은 생과일·젤라토 파르페를 선보입니다.',
+          family: '야간 영업 중심이므로 저녁 식사 후 온 가족이 도심의 밤 분위기를 즐기며 달콤하게 마무리하기 좋습니다.',
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Parfaiteria+Pal+Sapporo' 
+        },
+        { 
+          id: 'spot_d2_garaku', 
+          category: 'dinner', 
+          name: '수프카레 GARAKU', 
+          reason: '30여 가지 향신료와 일식 다시 육수를 조합한 깊은 감칠맛의 국물과 부드러운 닭다리가 일품입니다.',
+          family: '밥 위에 치즈 토핑이나 브로콜리 튀김을 추가해 아이 입맛에 맞춰 맛있게 즐길 수 있습니다.',
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Soup+Curry+GARAKU+Sapporo' 
+        },
+        { 
+          id: 'spot_d2_ichigen', 
+          category: 'dinner', 
+          name: '에비소바 이치겐 스스키노 본점', 
+          reason: '단새우 머리를 우려낸 진하고 고소한 새우 미소 육수로 독보적인 맛을 자랑합니다.', 
+          family: '육수 농도를 고를 수 있고, 구운 만두나 새우 주먹밥을 사이드로 곁들여 아이와 나누어 먹기 좋습니다.', 
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Ebisoba+Ichigen+Main+Shop+Sapporo' 
+        },
+        { 
+          id: 'spot_d2_murakami', 
+          category: 'dinner', 
+          name: '하코다테 우니 무라카미 삿포로점 (예약가능)', 
+          reason: '명반(보존제)을 일절 쓰지 않은 100% 무첨가 천연 성게알(우니)의 달콤하고 고소한 본연의 풍미를 맛볼 수 있는 전문점입니다.', 
+          family: '쾌적한 룸 좌석이 마련되어 있어 가족끼리 프라이빗하고 편안하게 고급스러운 해산물 만찬을 즐기기에 제격입니다.', 
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Hakodate+Uni+Murakami+Sapporo' 
+        }
+      ],
+      'day-3': [
+        { 
+          id: 'spot_d3_rivista', 
+          category: 'lunch', 
+          name: "이와세 목장 레스토랑 'RIVISTA' & 젤라토", 
+          reason: '목장에서 직접 생산한 신선한 우유와 치즈로 만든 수제 피자 및 파스타를 맛볼 수 있습니다. 삿포로-후라노 이동 중 들르기 좋습니다.', 
+          family: '식사 후 바로 맞은편 직매점에서 줄 서서 먹는 신선한 젤라토를 디저트로 즐길 수 있습니다.', 
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Iwase+Farm+RIVISTA+Sunagawa' 
+        },
+        { 
+          id: 'spot_d3_kitakaro', 
+          category: 'lunch', 
+          name: '북과루 스나가와 본점 (北菓楼 砂川本店)', 
+          reason: '홋카이도 대표 제과 브랜드 북과루 본점으로, 카페 스페이스에서 깔끔한 런치 메뉴와 슈크림, 시폰케이크를 함께 맛볼 수 있습니다.', 
+          family: '건물 옆 아름다운 정원(북과루의 숲)이 있어 드라이브 도중 아이들과 산책하기 좋습니다.', 
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Kitakaro+Sunagawa+Main+Shop' 
+        },
+        { 
+          id: 'spot_d3_sandan', 
+          category: 'spot', 
+          name: '산단 폭포 (三段滝 / 산단타키)', 
+          reason: '강물이 3단 바위를 호쾌하게 흘러내리는 명소로, 국도 38호선 산길 도로변에 위치한 자연 폭포입니다. 가을 단풍이 아름답습니다.', 
+          family: '주차장에서 도보 1분 거리라 렌터카 이동 중 잠시 내려 피톤치드를 마시며 리프레시하기 좋습니다.', 
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Sandan+Falls+Ashibetsu' 
+        },
+        { 
+          id: 'spot_d3_roller', 
+          category: 'spot', 
+          name: '제트코스터 도로 (ジェットコースターの路)', 
+          reason: '가미후라노 2.5km 직선 도로로 가파른 오르막과 내리막이 연속으로 이어져 제트코스터를 타는 듯한 재미를 선사합니다.', 
+          family: '도카치다케 연봉과 전원 풍경이 드넓게 펼쳐져 있어 차 안에서 가족 모두 즐겁게 경관을 감상할 수 있습니다.', 
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Roller+Coaster+Road+Kamifurano' 
+        },
+        { 
+          id: 'spot_d3_yamano', 
+          category: 'spot', 
+          name: '야마노 분시츠 (山の分室 / Yamano Bunshitsu)', 
+          reason: '가미후라노의 고즈넉한 숨은 감성 카페로, 통창 너머로 숲과 들판 풍경이 한눈에 들어옵니다.', 
+          family: '렌터카로 방문하기 편하며, 조용하고 여유롭게 가족 티타임을 가지기 좋습니다.', 
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Yamano+Bunshitsu+Kamifurano' 
+        },
+        { 
+          id: 'spot_d3_campana', 
+          category: 'spot', 
+          name: '캄파나 롯카테이 (カンパーナ六花亭)', 
+          reason: '포도밭 언덕 위에 자리 잡은 롯카테이 카페 겸 갤러리로 도카치다케 연봉이 파노라마로 펼쳐집니다.', 
+          family: '후라노 한정 디저트인 후라노 앙코로 등과 함께 절경을 바라보며 힐링하기 좋습니다.', 
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Campana+Rokkatei+Furano' 
+        },
+        {
+          id: 'spot_d3_kumagera',
+          category: 'dinner',
+          name: '쿠마게라 (くま게ら / Kumagera)',
+          reason: '후라노 대표 향토 요리 노포로 드라마 북쪽의 나라에서 촬영지입니다. 부드러운 와규 로스트비프 덮밥과 오므카레가 명물입니다.',
+          family: '라비스타 후라노 힐즈 호텔에서 도보 2~3분 거리로 온 가족이 편안하게 식사할 수 있습니다.',
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Kumagera+Furano'
+        },
+        {
+          id: 'spot_d3_yuiga',
+          category: 'dinner',
+          name: '유이가도쿠손 (唯我独尊 / Yuiga Doxon)',
+          reason: '타벨로그 백명점 선정 노포 카레 전문점입니다. 수제 소시지 오무카레가 대표적이며 루 무료 리필이 가능합니다.',
+          family: '호텔에서 도보 3~4분 거리이며 주방 카운터에서 "루-루-루-"를 외쳐 리필받는 색다른 재미가 있습니다.',
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Yuiga+Doxon+Furano'
+        }
+      ],
+      'day-4': [
+        { 
+          id: 'spot_d4_junpei', 
+          category: 'lunch', 
+          name: '비에이 준페이 (Junpei) - 에비동', 
+          reason: '바삭하고 큼직한 새우튀김과 특제 단짠 소스가 어우러진 비에이 최고의 명물 에비동입니다.', 
+          family: '온 가족 호불호 없이 최고로 꼽는 식당입니다. 당일 오픈런 또는 현장 예약 필수 권장.', 
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Junpei+Biei' 
+        },
+        { 
+          id: 'spot_d4_asahidake_rest', 
+          category: 'lunch', 
+          name: '아사히다케 로프웨이 산록역 식당 (알펜 플로라)', 
+          reason: '해발 1,100m 산록역 2층 레스토랑으로 큼직한 야채 카레와 돈까스 라멘이 대표적입니다.', 
+          family: '로프웨이 탑승 전후로 이동 없이 같은 건물 안에서 따뜻하게 식사하기 편리합니다.', 
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Sanroku+Station+Restaurant+Alpen+Flora+Asahidake' 
+        },
+        { 
+          id: 'spot_d4_aoba_ramen', 
+          category: 'lunch', 
+          name: '아사히카와 라멘 아오바 본점', 
+          reason: '1948년 창업한 전통 노포로 사골·닭 육수와 해산물 더블 수프 간장 라멘이 시그니처입니다.', 
+          family: '오전 9시 30분부터 일찍 영업을 시작하므로 이른 아점 코스로 유연하게 방문하기 좋습니다.', 
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Asahikawa+Ramen+Aoba+Main+Branch' 
+        },
+        { 
+          id: 'spot_d4_biei_town', 
+          category: 'spot', 
+          name: '비에이초 (북쪽 / 차량 약 30~40분)', 
+          reason: '패치워크 로드, 파노라마 로드의 언덕 드라이브와 청의 호수, 흰수염 폭포 등 대자연 필수 코스입니다.', 
+          family: '10월의 황금빛 단풍 들판과 시키사이노오카의 알파카 체험 등 다채로운 볼거리가 가득합니다.', 
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Biei+Hokkaido' 
+        },
+        { 
+          id: 'spot_d4_asahidake', 
+          category: 'spot', 
+          name: '대설산 아사히다케 로프웨이 & 스가타미 연못', 
+          reason: '홋카이도 최고봉으로 일본에서 가장 빨리 단풍과 첫눈을 맞이하는 웅장한 대자연 명소입니다.', 
+          family: '로프웨이를 타고 10분 만에 해발 1,600m에 올라 화산 분기공과 호수를 편안히 감상할 수 있습니다.', 
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Asahidake+Ropeway+Higashikawa' 
+        },
+        { 
+          id: 'spot_d4_bluepond', 
+          category: 'spot', 
+          name: '비에이 청의 호수 (아오이이케)', 
+          reason: '자작나무와 신비로운 코발트블루 호수 빛깔이 어우러진 비현실적인 풍경의 대표 명소입니다.', 
+          family: '햇빛 각도가 좋은 맑은 오전 시간대(08:00~10:00)에 방문하면 더욱 영롱한 물빛을 볼 수 있습니다.', 
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Shirogane+Blue+Pond+Biei' 
+        },
+        { 
+          id: 'spot_d4_shirahige', 
+          category: 'spot', 
+          name: '흰수염 폭포 (시라히게노타키)', 
+          reason: '청의 호수에서 차로 5분 거리로, 암벽 틈새로 지하수가 쏟아져 내리는 절경 계곡 폭포입니다.', 
+          family: '다리 위에서 한눈에 탁 트인 푸른 물빛 계류와 가을 단풍을 함께 감상할 수 있습니다.', 
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Shirahige+Waterfall+Biei' 
+        },
+        { 
+          id: 'spot_d4_tokachidake', 
+          category: 'spot', 
+          name: '도카치다케 전망대 (해발 930m)', 
+          reason: '거친 화산 용암류 흔적과 웅장한 가을 산세가 눈앞에 펼쳐지는 파노라마 전망대입니다.', 
+          family: '차로 정상 인근까지 편하게 올라갈 수 있으며 당일치기 온천욕과 연계하기 좋습니다.', 
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Tokachidake+Observatory+Biei' 
+        },
+        { 
+          id: 'spot_d4_biruke', 
+          category: 'spot', 
+          name: '미치노에키 비에이 시로가네 비루케 카페', 
+          reason: '청의 호수 색감을 담은 블루 폰드 소프트아이스크림과 테이크아웃 커피가 있는 휴게 거점입니다.', 
+          family: '넓은 주차장과 편의시설이 완비되어 있어 드라이브 중간 휴식처로 최적입니다.', 
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Michi-no-Eki+Biei+Shirogane+Biruke' 
+        },
+        { 
+          id: 'spot_d4_ferme', 
+          category: 'spot', 
+          name: 'Ferme La Terre Biei (페름 라테르 비에이)', 
+          reason: '비에이산 신선한 유제품으로 구워내는 유명 팜 베이커리 카페로 우유 슈크림이 인기입니다.', 
+          family: '탁 트인 전원 풍경을 바라보며 신선한 빵과 디저트를 여유롭게 즐길 수 있습니다.', 
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Ferme+La+Terre+Biei' 
+        },
+        {
+          id: 'spot_d4_winehouse',
+          category: 'dinner',
+          name: '후라노 와인하우스 (Furano Wine House)',
+          reason: '언덕 위에서 후라노 야경을 내려다보며 즐기는 치즈 퐁듀와 도카치 스테이크 명가입니다.',
+          family: '호텔에서 차로 7~10분 거리이며 고소한 치즈 퐁듀와 피자는 온 가족 저녁 외식으로 인기입니다.',
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Furano+Wine+House'
+        },
+        {
+          id: 'spot_d4_yamadori',
+          category: 'dinner',
+          name: '숯불구이 클럽 야마도리 (YAMADORI)',
+          reason: '돌창고 건물을 개조한 운치 있는 분위기에서 후라노 와규와 삼겹 숯불구이를 즐길 수 있습니다.',
+          family: '호텔에서 도보 약 2~3분 거리로 접근성이 매우 뛰어나 편안한 저녁 만찬을 즐길 수 있습니다.',
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Kunen+Kobo+Yamadori+Furano'
+        }
+      ],
+      'day-5': [
+        { 
+          id: 'spot_d5_sushiro', 
+          category: 'lunch', 
+          name: '스시로 치토세점 (スシロー 千歳店)', 
+          reason: '신치토세 공항 및 렌터카 반납점 인근의 가성비 높은 인기 회전초밥 전문점입니다.', 
+          family: '넓은 테이블석과 한국어 태블릿 주문이 가능해 아이와 함께 신속하고 편안하게 즐기기 좋습니다.', 
+          mapUrl: 'https://maps.google.com/?cid=5201570488136432358' 
+        },
+        { 
+          id: 'spot_d5_luonto', 
+          category: 'lunch', 
+          name: '루원토 (ルウォント / Luonto)', 
+          reason: '홋카이도 자연 감성의 아늑한 로그하우스 수프카레 전문점으로 풍성한 구운 채소가 일품입니다.', 
+          family: '공항 남하 고속도로 IC 인근에 위치해 렌터카 이동 경로상 들르기 안성맞춤입니다.', 
+          mapUrl: 'https://maps.google.com/?cid=5416020409602046908' 
+        },
+        { 
+          id: 'spot_d5_taki', 
+          category: 'lunch', 
+          name: '라멘 노 타키 (ラーメンの瀧)', 
+          reason: '30년 전통의 사골 육수와 푸짐한 야채 미소 라멘이 대표적인 현지 노포 라멘집입니다.', 
+          family: '국도변 주차가 편리하며 진하고 부드러운 국물로 따뜻하게 든든한 식사가 가능합니다.', 
+          mapUrl: 'https://maps.google.com/?cid=13833829020161390167' 
+        },
+        {
+          id: 'spot_d5_ningle',
+          category: 'spot',
+          name: '닝구르테라스 (Ningle Terrace)',
+          reason: '침엽수림 숲속 오솔길을 따라 통나무 공방들이 모여 있는 동화 같은 감성 공예 마을입니다.',
+          family: '오전 체크아웃 직후 가볍게 둘러보기 좋으며 예쁜 가족 사진을 남기기에 완벽합니다.',
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Ningle+Terrace+Furano'
+        },
+        {
+          id: 'spot_d5_cheesefactory',
+          category: 'spot',
+          name: '후라노 치즈공방',
+          reason: '숲속에서 홋카이도 청정 유제품 제조 견학과 치즈 시식, 화덕 피자를 맛볼 수 있는 공방입니다.',
+          family: '실물 모형 우유 짜기 체험과 아이스크림 간식이 있어 초등학생 아들과 유익한 체험이 가능합니다.',
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Furano+Cheese+Factory'
+        },
+        {
+          id: 'spot_d5_kanayamadam',
+          category: 'spot',
+          name: '가나야마 댐 (金山ダム)',
+          reason: '소라치강 상류의 웅장한 다목적 댐과 고요한 인공 호수가 어우러진 가을 단풍 뷰포인트입니다.',
+          family: '신치토세 공항 방면 드라이브 경로상에 위치해 여유롭게 경관을 관람하기 좋습니다.',
+          mapUrl: 'https://www.google.com/maps/search/?api=1&query=Kanayama+Dam+Minamifurano'
+        },
+        {
+          id: 'spot_d5_birdwatching',
+          category: 'spot',
+          name: '더 버드 워칭 카페 (THE BIRD WATCHING CAFÉ)',
+          reason: '통창 너머로 야생 들새와 홋카이도 다람쥐를 바로 눈앞에서 관람할 수 있는 숲속 카페입니다.',
+          family: '시그니처 시마에나가 아이스크림과 함께 렌터카 반납 전 힐링 티타임을 갖기 좋습니다.',
+          mapUrl: 'https://maps.google.com/?cid=10523515897584762084'
+        },
+        {
+          id: 'spot_d5_doremoletao',
+          category: 'spot',
+          name: '드레모 르타오 (Doremo LeTAO)',
+          reason: '1,600평 규모의 대형 르타오 플래그십 매장으로 입에서 녹는 즉석 수플레 팬케이크가 명물입니다.',
+          family: '공항 및 렌터카 반납점 바로 인근에 있어 마지막 선물용 디저트 쇼핑과 휴식을 겸하기 좋습니다.',
+          mapUrl: 'https://maps.google.com/?cid=7255695728472217607'
+        }
+      ]
+    };
+
+    let dynamicSpots = null;
+    try {
+      dynamicSpots = JSON.parse(localStorage.getItem('sapporo_dynamic_spots_v22'));
+    } catch (e) {
+      dynamicSpots = null;
+    }
+    if (!dynamicSpots) {
+      dynamicSpots = initialDefaultSpots;
+      localStorage.setItem('sapporo_dynamic_spots_v22', JSON.stringify(dynamicSpots));
+    }
+
+    function openSpotDetailModal(dayKey, spotId) {
+      const spots = dynamicSpots[dayKey] || [];
+      const spot = spots.find(s => s.id === spotId);
+      if (!spot) return;
+
+      const catBadge = document.getElementById('detailCategoryBadge');
+      const nameEl = document.getElementById('detailSpotName');
+      const bodyEl = document.getElementById('detailContentBody');
+      const mapBtn = document.getElementById('detailMapBtn');
+
+      const catText = spot.category === 'lunch' ? '🍱 점심 후보' : spot.category === 'dinner' ? '🍽️ 저녁 후보' : '📍 관광 / 카페';
+      if (catBadge) catBadge.innerText = catText;
+      if (nameEl) nameEl.innerText = spot.name;
+
+      const mapLink = spot.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(spot.name)}`;
+      if (mapBtn) mapBtn.href = mapLink;
+
+      let contentHtml = '';
+
+      if (spot.reason || spot.family) {
+        if (spot.reason) {
+          contentHtml += `
+            <div class="bg-indigo-50/70 p-3 rounded-2xl border border-indigo-100">
+              <div class="font-extrabold text-indigo-900 flex items-center gap-1 mb-1">
+                <span>🌟</span> 추천 이유
+              </div>
+              <p class="text-slate-700 leading-relaxed">${spot.reason}</p>
+            </div>
+          `;
+        }
+        if (spot.family) {
+          contentHtml += `
+            <div class="bg-amber-50/70 p-3 rounded-2xl border border-amber-100">
+              <div class="font-extrabold text-amber-900 flex items-center gap-1 mb-1">
+                <span>👨‍👩‍👦</span> 가족 편의 & 팁
+              </div>
+              <p class="text-slate-700 leading-relaxed">${spot.family}</p>
+            </div>
+          `;
+        }
+      } else if (spot.memo) {
+        contentHtml += `
+          <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
+            <div class="font-extrabold text-slate-800 flex items-center gap-1 mb-1">
+              <span>📝</span> 등록된 메모 & 상세 안내
+            </div>
+            <p class="text-slate-700 leading-relaxed whitespace-pre-wrap">${spot.memo}</p>
+          </div>
+        `;
+      } else {
+        contentHtml += `
+          <div class="py-6 text-center text-slate-400 bg-slate-50 rounded-2xl border border-dashed">
+            등록된 상세 메모가 없습니다.<br>하단의 [📍 구글 지도 열기]로 현장 정보를 확인하세요.
+          </div>
+        `;
+      }
+
+      if (bodyEl) bodyEl.innerHTML = contentHtml;
+      const modal = document.getElementById('spotDetailModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeSpotDetailModal() {
+      const modal = document.getElementById('spotDetailModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function openAddSpotModal() { document.getElementById('addSpotModal')?.classList.remove('hidden'); }
+    function closeAddSpotModal() { 
+      document.getElementById('addSpotModal')?.classList.add('hidden');
+      const nameInput = document.getElementById('modalName');
+      const mapInput = document.getElementById('modalMapUrl');
+      const memoInput = document.getElementById('modalMemo');
+      if (nameInput) nameInput.value = '';
+      if (mapInput) mapInput.value = '';
+      if (memoInput) memoInput.value = '';
+    }
+
+    function saveNewSpot() {
+      const dayKey = document.getElementById('modalDate').value;
+      const category = document.getElementById('modalCategory').value;
+      let name = document.getElementById('modalName').value.trim();
+      const rawMapUrl = document.getElementById('modalMapUrl').value.trim();
+      const memo = document.getElementById('modalMemo').value.trim();
+
+      let directUrl = "";
+      if (rawMapUrl.startsWith("http://") || rawMapUrl.startsWith("https://")) {
+        directUrl = rawMapUrl;
+      } else if (name.startsWith("http://") || name.startsWith("https://")) {
+        directUrl = name;
+        name = "추가된 장소";
+      }
+
+      if (!name && !directUrl) {
+        showToast('장소명 또는 구글 지도 링크를 입력해주세요.');
+        return;
+      }
+      if (!name) name = "추가된 스팟";
+
+      if (!dynamicSpots[dayKey]) dynamicSpots[dayKey] = [];
+      const newSpot = {
+        id: 'dyn_' + Date.now(),
+        category,
+        name,
+        mapUrl: directUrl,
+        memo
+      };
+
+      dynamicSpots[dayKey].push(newSpot);
+      localStorage.setItem('sapporo_dynamic_spots_v22', JSON.stringify(dynamicSpots));
+      renderDynamicSpots();
+      closeAddSpotModal();
+      showToast('새 스팟이 추가되었습니다.');
+    }
+
+    function promptDeleteSpot(dayKey, spotId, spotName) {
+      openConfirmModal(spotName, "이 스팟 후보를 일정에서 삭제하시겠습니까?", () => {
+        dynamicSpots[dayKey] = (dynamicSpots[dayKey] || []).filter(s => s.id !== spotId);
+        localStorage.setItem('sapporo_dynamic_spots_v22', JSON.stringify(dynamicSpots));
+        renderDynamicSpots();
+        showToast('스팟이 삭제되었습니다.');
+      }, { type: 'spot' });
+    }
+
+    function moveSpotOrder(dayKey, index, direction) {
+      const list = dynamicSpots[dayKey] || [];
+      const targetIndex = index + direction;
+      if (targetIndex < 0 || targetIndex >= list.length) return;
+
+      const temp = list[index];
+      list[index] = list[targetIndex];
+      list[targetIndex] = temp;
+
+      dynamicSpots[dayKey] = list;
+      localStorage.setItem('sapporo_dynamic_spots_v22', JSON.stringify(dynamicSpots));
+      renderDynamicSpots();
+      showToast('스팟 순서가 변경되었습니다.');
+    }
+
+    function renderDynamicSpots() {
+      ['day-1', 'day-2', 'day-3', 'day-4', 'day-5'].forEach(dayKey => {
+        const container = document.getElementById(`dynamic-spots-${dayKey}`);
+        if (!container) return;
+        const spots = dynamicSpots[dayKey] || [];
+
+        if (spots.length === 0) {
+          container.innerHTML = `<div class="p-2.5 text-center text-[11px] text-slate-400 bg-slate-50/70 rounded-xl border border-dashed border-slate-200">등록된 식당/스팟이 없습니다. 상단의 '+ 스팟'을 눌러 추가해보세요!</div>`;
+          return;
+        }
+
+        container.innerHTML = spots.map((s, idx) => {
+          const catLabel = s.category === 'lunch' ? '🍱 점심' : s.category === 'dinner' ? '🍽️ 저녁' : '📍 명소/카페';
+          const catBadgeClass = s.category === 'lunch' ? 'bg-emerald-50 text-emerald-700' : s.category === 'dinner' ? 'bg-indigo-50 text-indigo-700' : 'bg-sky-50 text-sky-700';
+
+          const targetUrl = s.mapUrl ? s.mapUrl : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.name)}`;
+          const walkUrl = s.mapUrl ? s.mapUrl : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(s.name)}&travelmode=walking`;
+          const driveUrl = s.mapUrl ? s.mapUrl : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(s.name)}&travelmode=driving`;
+
+          const isFirst = idx === 0;
+          const isLast = idx === spots.length - 1;
+
+          return `
+            <div id="card-${s.id}" data-day="${dayKey}" data-index="${idx}" class="spot-card-item bg-white p-3 rounded-2xl border border-slate-200 shadow-2xs hover:border-indigo-300 transition-all duration-150 relative">
+              <div class="flex justify-between items-start">
+                <div class="flex items-center gap-1.5">
+                  <div class="flex items-center gap-0.5 bg-slate-100 rounded-lg p-0.5">
+                    <button onclick="moveSpotOrder('${dayKey}', ${idx}, -1)" class="w-5 h-5 flex items-center justify-center text-[10px] font-black text-slate-500 hover:text-indigo-600 hover:bg-white rounded transition active:scale-90 ${isFirst ? 'opacity-20 pointer-events-none' : ''}" title="위로 올리기">▲</button>
+                    <button onclick="moveSpotOrder('${dayKey}', ${idx}, 1)" class="w-5 h-5 flex items-center justify-center text-[10px] font-black text-slate-500 hover:text-indigo-600 hover:bg-white rounded transition active:scale-90 ${isLast ? 'opacity-20 pointer-events-none' : ''}" title="아래로 내리기">▼</button>
+                  </div>
+                  <span class="text-slate-300 text-xs font-black select-none cursor-grab active:cursor-grabbing px-0.5" title="1초간 꾹 눌러 위·아래 드래그">⠿</span>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-md ${catBadgeClass}">${catLabel}</span>
+                </div>
+                <button onclick="promptDeleteSpot('${dayKey}', '${s.id}', '${s.name.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-rose-600 hover:bg-rose-50 px-2 py-0.5 rounded-lg text-xs font-bold transition flex items-center gap-0.5" title="삭제">
+                  <span>✕</span><span class="text-[10px]">삭제</span>
+                </button>
+              </div>
+
+              <div class="mt-2">
+                <button onclick="openSpotDetailModal('${dayKey}', '${s.id}')" class="text-left group flex items-baseline gap-1.5 w-full">
+                  <span class="text-sm font-extrabold text-slate-800 group-hover:text-indigo-600 transition leading-snug">${s.name}</span>
+                  <span class="text-[10px] font-bold text-indigo-500 group-hover:underline shrink-0">상세보기 ›</span>
+                </button>
+              </div>
+
+              <div class="flex justify-end gap-1 mt-2.5 pt-2 border-t border-slate-100">
+                <a href="${targetUrl}" target="_blank" class="px-2 py-1 text-xs bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-lg border border-slate-200 font-semibold shadow-2xs">📍 위치</a>
+                <a href="${walkUrl}" target="_blank" class="px-2 py-1 text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-lg font-bold shadow-2xs">🚶 도보</a>
+                <a href="${driveUrl}" target="_blank" class="px-2 py-1 text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded-lg font-bold shadow-2xs">🚗 운전</a>
+                <button onclick="openGallery('${s.id}', '${s.name.replace(/'/g, "\\'")}')" class="px-2 py-1 text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg border border-indigo-200 font-bold flex items-center gap-0.5">
+                  <span>📸</span><span id="badge-${s.id}">0</span>
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      });
+      refreshAllPhotoBadges();
+      attachLongPressReorderListeners();
+    }
+
+    // 드래그 앤 드롭 및 롱프레스 터치 제어
+    let dragItem = null;
+    let dragDayKey = null;
+    let placeholder = null;
+    let longPressTimer = null;
+    let isDragActive = false;
+    let startY = 0;
+    let startX = 0;
+    let activePointerId = null;
+
+    function attachLongPressReorderListeners() {
+      const spotCards = document.querySelectorAll('.spot-card-item');
+
+      spotCards.forEach(card => {
+        card.onpointerdown = handlePointerDown;
+        card.oncontextmenu = (e) => {
+          if (isDragActive || longPressTimer) e.preventDefault();
+        };
+      });
+    }
+
+    function handlePointerDown(e) {
+      if (e.target.closest('button') || e.target.closest('a') || e.target.closest('input')) return;
+
+      const card = e.currentTarget;
+      const dayKey = card.getAttribute('data-day');
+      startY = e.clientY;
+      startX = e.clientX;
+      activePointerId = e.pointerId;
+
+      clearTimeout(longPressTimer);
+      longPressTimer = setTimeout(() => {
+        startSpotDragging(card, dayKey);
+      }, 800);
+
+      window.addEventListener('pointermove', handlePointerMove, { passive: false });
+      window.addEventListener('pointerup', handlePointerUp);
+      window.addEventListener('pointercancel', handlePointerUp);
+    }
+
+    function handlePointerMove(e) {
+      if (!isDragActive) {
+        const moveDist = Math.hypot(e.clientX - startX, e.clientY - startY);
+        if (moveDist > 20) {
+          clearTimeout(longPressTimer);
+        }
+        return;
+      }
+
+      e.preventDefault();
+
+      const container = document.getElementById(`dynamic-spots-${dragDayKey}`);
+      if (!container || !placeholder) return;
+
+      const clientY = e.clientY;
+      const siblings = Array.from(container.querySelectorAll('.spot-card-item:not(.is-dragging)'));
+
+      let targetSibling = null;
+      for (const sib of siblings) {
+        const rect = sib.getBoundingClientRect();
+        const middleY = rect.top + rect.height / 2;
+        if (clientY < middleY) {
+          targetSibling = sib;
+          break;
+        }
+      }
+
+      if (targetSibling) {
+        container.insertBefore(placeholder, targetSibling);
+      } else {
+        container.appendChild(placeholder);
+      }
+    }
+
+    function startSpotDragging(card, dayKey) {
+      isDragActive = true;
+      dragItem = card;
+      dragDayKey = dayKey;
+
+      try {
+        if (activePointerId !== null && card.setPointerCapture) {
+          card.setPointerCapture(activePointerId);
+        }
+      } catch (err) {}
+
+      if (navigator.vibrate) {
+        try { navigator.vibrate([40, 30, 40]); } catch (err) {}
+      }
+
+      showToast("위·아래로 끌어서 순서를 변경하세요");
+
+      placeholder = document.createElement('div');
+      placeholder.className = 'spot-drag-placeholder';
+      placeholder.style.height = `${card.offsetHeight}px`;
+
+      card.classList.add('is-dragging');
+      card.parentNode.insertBefore(placeholder, card.nextSibling);
+    }
+
+    function handlePointerUp() {
+      clearTimeout(longPressTimer);
+
+      if (isDragActive && dragItem && dragDayKey && placeholder) {
+        const container = document.getElementById(`dynamic-spots-${dragDayKey}`);
+        
+        container.insertBefore(dragItem, placeholder);
+        placeholder.remove();
+        dragItem.classList.remove('is-dragging');
+
+        try {
+          if (activePointerId !== null && dragItem.releasePointerCapture) {
+            dragItem.releasePointerCapture(activePointerId);
+          }
+        } catch (err) {}
+
+        const updatedIds = Array.from(container.querySelectorAll('.spot-card-item')).map(el => el.id.replace('card-', ''));
+        const originalList = dynamicSpots[dragDayKey] || [];
+        
+        const reorderedList = [];
+        updatedIds.forEach(id => {
+          const item = originalList.find(s => s.id === id);
+          if (item) reorderedList.push(item);
+        });
+
+        dynamicSpots[dragDayKey] = reorderedList;
+        localStorage.setItem('sapporo_dynamic_spots_v22', JSON.stringify(dynamicSpots));
+
+        showToast("스팟 순서가 변경되었습니다.");
+        renderDynamicSpots();
+      }
+
+      isDragActive = false;
+      dragItem = null;
+      dragDayKey = null;
+      placeholder = null;
+      activePointerId = null;
+
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', handlePointerUp);
+      window.removeEventListener('pointercancel', handlePointerUp);
+    }
+
+    let db;
+    let currentSpotKey = "";
+    let activeLightboxPhoto = null;
+
+    const dbReq = indexedDB.open("SapporoPhotoDB_v2", 1);
+    dbReq.onupgradeneeded = (e) => {
+      db = e.target.result;
+      if (!db.objectStoreNames.contains("photos")) {
+        const store = db.createObjectStore("photos", { keyPath: "id", autoIncrement: true });
+        store.createIndex("spotKey", "spotKey", { unique: false });
+      }
+    };
+    dbReq.onsuccess = (e) => {
+      db = e.target.result;
+      refreshAllPhotoBadges();
+    };
+
+    function openGallery(spotKey, title) {
+      currentSpotKey = spotKey;
+      document.getElementById('gallerySpotTitle').innerText = `📸 ${title}`;
+      document.getElementById('photoGalleryModal').classList.remove('hidden');
+      loadGalleryPhotos();
+    }
+    function closeGalleryModal() { document.getElementById('photoGalleryModal').classList.add('hidden'); }
+    function triggerCameraInput() { document.getElementById('cameraInput').click(); }
+    function triggerAlbumInput() { document.getElementById('albumInput').click(); }
+
+    function handlePhotoUpload(e) {
+      const files = Array.from(e.target.files || []);
+      if (!files.length || !currentSpotKey || !db) return;
+
+      let completed = 0;
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          const tx = db.transaction("photos", "readwrite");
+          const store = tx.objectStore("photos");
+          store.add({ spotKey: currentSpotKey, dataUrl: evt.target.result, time: Date.now() });
+          tx.oncomplete = () => {
+            completed++;
+            if (completed === files.length) {
+              loadGalleryPhotos();
+              refreshAllPhotoBadges();
+              showToast(`${files.length}장의 사진이 등록되었습니다.`);
+            }
+          };
+        };
+        reader.readAsDataURL(file);
+      });
+      e.target.value = '';
+    }
+
+    function loadGalleryPhotos() {
+      const grid = document.getElementById('galleryPhotoGrid');
+      grid.innerHTML = "";
+      if (!db) return;
+
+      const tx = db.transaction("photos", "readonly");
+      const store = tx.objectStore("photos");
+      const idx = store.index("spotKey");
+      const req = idx.getAll(currentSpotKey);
+
+      req.onsuccess = () => {
+        const photos = req.result;
+        if (photos.length === 0) {
+          grid.innerHTML = `<div class="col-span-3 py-10 text-center text-xs text-slate-400">등록된 사진이 없습니다.<br/>직접 촬영하거나 폰 앨범에서 선택해보세요!</div>`;
+          return;
+        }
+        photos.forEach(p => {
+          const div = document.createElement('div');
+          div.className = "relative aspect-square rounded-xl overflow-hidden border border-slate-200 bg-slate-100 cursor-pointer group";
+          div.innerHTML = `
+            <img src="${p.dataUrl}" class="w-full h-full object-cover group-active:scale-95 transition duration-150" />
+            <div class="absolute bottom-1 right-1 bg-black/60 text-white text-[9px] px-1.5 py-0.5 rounded-md backdrop-blur-xs font-semibold">보기/저장</div>
+          `;
+          div.onclick = () => openPhotoLightbox(p);
+          grid.appendChild(div);
+        });
+      };
+    }
+
+    function openPhotoLightbox(photoObj) {
+      activeLightboxPhoto = photoObj;
+      const modal = document.getElementById('photoLightboxModal');
+      const targetImg = document.getElementById('lightboxImgTarget');
+      const timeText = document.getElementById('lightboxTimeText');
+
+      targetImg.src = photoObj.dataUrl;
+      const formattedDate = photoObj.time ? new Date(photoObj.time).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+      timeText.innerText = formattedDate ? `촬영일시: ${formattedDate}` : '사진 상세 보기';
+
+      modal.classList.remove('hidden');
+    }
+
+    function closePhotoLightbox() {
+      const modal = document.getElementById('photoLightboxModal');
+      modal.classList.add('hidden');
+      activeLightboxPhoto = null;
+    }
+
+    function downloadCurrentLightboxPhoto() {
+      if (!activeLightboxPhoto || !activeLightboxPhoto.dataUrl) return;
+
+      const link = document.createElement('a');
+      link.href = activeLightboxPhoto.dataUrl;
+      link.download = `sapporo_${currentSpotKey}_${Date.now()}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showToast("내 폰 갤러리(다운로드)에 사진이 저장되었습니다.");
+    }
+
+    function deleteCurrentLightboxPhoto() {
+      if (!activeLightboxPhoto) return;
+      const targetId = activeLightboxPhoto.id;
+
+      openConfirmModal("선택한 사진", "이 사진을 앨범에서 삭제하시겠습니까?", () => {
+        if (!db) return;
+        const tx = db.transaction("photos", "readwrite");
+        tx.objectStore("photos").delete(targetId);
+        tx.oncomplete = () => {
+          closePhotoLightbox();
+          loadGalleryPhotos();
+          refreshAllPhotoBadges();
+          showToast('사진이 삭제되었습니다.');
+        };
+      }, { type: 'photo' });
+    }
+
+    function refreshAllPhotoBadges() {
+      if (!db) return;
+      const tx = db.transaction("photos", "readonly");
+      const store = tx.objectStore("photos");
+      const req = store.getAll();
+      req.onsuccess = () => {
+        const countMap = {};
+        req.result.forEach(p => {
+          countMap[p.spotKey] = (countMap[p.spotKey] || 0) + 1;
+        });
+        document.querySelectorAll("[id^='badge-']").forEach(b => {
+          const key = b.id.replace('badge-', '');
+          b.innerText = countMap[key] || 0;
+        });
+      };
+    }
+
+    // 5. 탭 전환
+    function switchTab(tab) {
+      const secItin = document.getElementById('itinerarySection');
+      const secCheck = document.getElementById('checklistSection');
+      const secBudget = document.getElementById('budgetSection');
+      const stickyDayBar = document.getElementById('stickyDayBar');
+
+      const tabItinBtn = document.getElementById('tab-itinerary');
+      const tabCheckBtn = document.getElementById('tab-checklist');
+      const tabBudgetBtn = document.getElementById('tab-budget');
+
+      const headerSpotBtn = document.getElementById('headerAddSpotBtn');
+      const headerCheckBtn = document.getElementById('headerAddCheckBtn');
+      const headerExpBtn = document.getElementById('headerAddExpenseBtn');
+
+      if (secItin) secItin.classList.add('hidden');
+      if (secCheck) secCheck.classList.add('hidden');
+      if (secBudget) secBudget.classList.add('hidden');
+
+      [tabItinBtn, tabCheckBtn, tabBudgetBtn].forEach(b => {
+        if (b) b.className = "flex-1 py-2.5 text-center text-slate-500 border-b-2 border-transparent";
+      });
+
+      if (headerSpotBtn) headerSpotBtn.classList.add('hidden');
+      if (headerCheckBtn) headerCheckBtn.classList.add('hidden');
+      if (headerExpBtn) headerExpBtn.classList.add('hidden');
+
+      if (tab === 'itinerary') {
+        if (secItin) secItin.classList.remove('hidden');
+        if (tabItinBtn) tabItinBtn.className = "flex-1 py-2.5 text-center text-indigo-700 border-b-2 border-indigo-700 font-black";
+        if (stickyDayBar) stickyDayBar.classList.remove('hidden');
+        document.getElementById('contentContainer').className = "pt-[145px]";
+        if (headerSpotBtn) headerSpotBtn.classList.remove('hidden');
+      } else if (tab === 'checklist') {
+        if (secCheck) secCheck.classList.remove('hidden');
+        if (tabCheckBtn) tabCheckBtn.className = "flex-1 py-2.5 text-center text-indigo-700 border-b-2 border-indigo-700 font-black";
+        if (stickyDayBar) stickyDayBar.classList.add('hidden');
+        document.getElementById('contentContainer').className = "pt-[98px]";
+        if (headerCheckBtn) headerCheckBtn.classList.remove('hidden');
+        renderChecklist();
+      } else if (tab === 'budget') {
+        if (secBudget) secBudget.classList.remove('hidden');
+        if (tabBudgetBtn) tabBudgetBtn.className = "flex-1 py-2.5 text-center text-indigo-700 border-b-2 border-indigo-700 font-black";
+        if (stickyDayBar) stickyDayBar.classList.add('hidden');
+        document.getElementById('contentContainer').className = "pt-[98px]";
+        if (headerExpBtn) headerExpBtn.classList.remove('hidden');
+        renderBudget();
+        loadBalances();
+      }
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
+    // 6. 날짜별 단독 표시 제어
+    let currentSelectedDay = 'day-1';
+
+    function selectDay(dayId, btn) {
+      currentSelectedDay = dayId;
+
+      document.querySelectorAll('.day-pill-btn').forEach(b => {
+        b.className = "day-pill-btn whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold bg-white text-slate-700 border border-slate-200 shadow-sm transition-all";
+      });
+      if (btn) {
+        btn.className = "day-pill-btn whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold bg-indigo-600 text-white shadow-sm transition-all";
+        btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+
+      const days = ['day-1', 'day-2', 'day-3', 'day-4', 'day-5'];
+      days.forEach(id => {
+        const sec = document.getElementById(id);
+        if (sec) {
+          if (id === dayId) {
+            sec.classList.remove('hidden');
+          } else {
+            sec.classList.add('hidden');
+          }
+        }
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderChecklist();
+      renderBudget();
+      renderDynamicSpots();
+      loadBalances();
+      const p1 = document.getElementById('pill-day-1');
+      if (p1) selectDay('day-1', p1);
+    });
+  </script>
+</body>
+</html>
